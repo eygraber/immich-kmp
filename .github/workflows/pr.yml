@@ -1,0 +1,44 @@
+name: Check
+
+on:
+  pull_request
+
+jobs:
+  danger:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.1
+
+      - name: Danger
+        uses: docker://ghcr.io/danger/danger-kotlin:1.2.0
+        with:
+          args: --failOnErrors --no-publish-check
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  detekt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.1
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version-file: .ci-java-version
+
+      - uses: gradle/wrapper-validation-action@v1.1.0
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2.11.1
+        with:
+          gradle-version: wrapper
+
+      - name: Run ktlint
+        run: ./format --no-format
+
+      - name: Run check
+        run: ./gradlew check
+
+      - name: Run detekt with type resolution
+        run: ./detekt
+

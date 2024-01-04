@@ -1,0 +1,20 @@
+name: todo
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4.1.1
+
+      - uses: alstr/todo-to-issue-action@v4.12
+        id: todo
+        with:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AUTO_P: false
+
