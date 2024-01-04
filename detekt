@@ -1,3 +1,23 @@
-#!/bin/sh
+#!/bin/bash
 
-./gradlew detektMetadataMain detektMetadataTest detektAndroidRelease detektJvmMain detektJsMain
+detektAndroidReleaseTasks=""
+
+# Find all directories named "release" that are not nested under "build"
+while read -r dir; do
+  # Extract the relative path until a directory called "src" and exclude it
+  src_path=$(echo "$dir" | sed -n "s|\(.*\)/src.*|\1|p")
+
+  # Strip leading dot (.) and replace slashes (/) with colons (:)
+  src_path=${src_path#.}
+  src_path=${src_path//\//:}
+
+  # Append ":detektRelease" to the extracted and formatted path
+  src_path+=":detektRelease"
+
+  # Concatenate the extracted, formatted, and appended path with a space delimiter
+  detektAndroidReleaseTasks+=" $src_path"
+done < <(find . -type d \( -name "release" \) ! -path "*/build/*")
+
+# TODO: re-enable this once we have real KMP modules with multiple targets and make sure :detektRelease above is changed to detektAndroidRelease
+# ./gradlew detektMetadataMain detektMetadataTest detektAndroidDebug $detektAndroidReleaseTasks detektJvmMain detektJsMain "$@"
+./gradlew detektDebug $detektAndroidReleaseTasks "$@"

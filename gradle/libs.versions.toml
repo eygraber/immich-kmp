@@ -3,7 +3,7 @@ android-plugin = "8.3.0-beta01"
 
 android-sdk-compile = "34"
 android-sdk-target = "34"
-android-sdk-min = "24"
+android-sdk-min = "28"
 
 androidx-activity = "1.8.2"
 androidx-core = "1.12.0"
