@@ -5,7 +5,13 @@ on:
 
 jobs:
   danger:
+    permissions:
+      contents: read
+      issues: read
+      pull-requests: write
+
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4.1.1
 
@@ -17,7 +23,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   detekt:
+    permissions:
+      contents: read
+
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4.1.1
 
