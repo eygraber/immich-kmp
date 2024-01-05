@@ -18,6 +18,4 @@ while read -r dir; do
   detektAndroidReleaseTasks+=" $src_path"
 done < <(find . -type d \( -name "release" \) ! -path "*/build/*")
 
-# TODO: re-enable this once we have real KMP modules with multiple targets and make sure :detektRelease above is changed to detektAndroidRelease
-# ./gradlew detektMetadataMain detektMetadataTest detektAndroidDebug $detektAndroidReleaseTasks detektJvmMain detektJsMain "$@"
-./gradlew detektDebug $detektAndroidReleaseTasks "$@"
+./gradlew detektMetadataMain detektMetadataTest detektAndroidDebug $detektAndroidReleaseTasks detektJvmMain detektCommonJsMain "$@"
