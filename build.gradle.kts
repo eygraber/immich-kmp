@@ -1,3 +1,4 @@
+import com.eygraber.conventions.kotlin.KmpTarget
 import com.eygraber.conventions.tasks.deleteRootBuildDirWhenCleaning
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -41,5 +42,13 @@ gradleConventionsDefaults {
 
   kotlin {
     jvmTargetVersion = JvmTarget.JVM_17
+  }
+
+  kotlinMultiplatform {
+    targets(
+      KmpTarget.Android,
+      KmpTarget.Jvm,
+      KmpTarget.WasmJs,
+    )
   }
 }
