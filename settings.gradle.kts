@@ -53,7 +53,7 @@ dependencyResolutionManagement {
 rootProject.name = "immich-kmp"
 
 plugins {
-  id("com.eygraber.conventions.settings") version "0.0.59"
+  id("com.eygraber.conventions.settings") version "0.0.64"
   id("com.gradle.enterprise") version "3.16.1"
 }
 
