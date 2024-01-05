@@ -58,6 +58,7 @@ plugins {
 }
 
 include("apps:android")
+include("icons")
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
