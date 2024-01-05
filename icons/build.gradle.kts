@@ -10,6 +10,10 @@ android {
 }
 
 kotlin {
+  defaultKmpTargets(
+    project = project,
+  )
+
   sourceSets {
     commonMain {
       dependencies {
