@@ -51,6 +51,8 @@ android {
   dependencies {
     coreLibraryDesugaring(libs.android.desugar)
 
+    implementation(projects.uiSession)
+
     implementation(compose.material3)
 
     implementation(libs.androidx.activity)

@@ -18,4 +18,4 @@ while read -r dir; do
   detektAndroidReleaseTasks+=" $src_path"
 done < <(find . -type d \( -name "release" \) ! -path "*/build/*")
 
-./gradlew detektMetadataMain detektMetadataTest detektAndroidDebug $detektAndroidReleaseTasks detektJvmMain detektCommonJsMain "$@"
+./gradlew detektMetadataMain detektMetadataTest detektAndroidDebug $detektAndroidReleaseTasks detektJvmMain detektWebMain "$@"

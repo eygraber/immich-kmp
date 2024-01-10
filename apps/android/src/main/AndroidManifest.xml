@@ -12,6 +12,7 @@
     android:roundIcon="@mipmap/ic_launcher_round"
     android:label="Immich KMP"
     android:supportsRtl="true"
+    android:name=".ImmichAndroidApplication"
     tools:ignore="GoogleAppIndexingWarning"
     tools:targetApi="tiramisu">
 

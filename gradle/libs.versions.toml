@@ -8,9 +8,9 @@ android-sdk-min = "28"
 androidx-activity = "1.8.2"
 androidx-core = "1.12.0"
 
-composeJetbrains = "1.6.0-dev1357"
+composeJetbrains = "1.6.0-alpha01"
 
-conventions = "0.0.64"
+conventions = "0.0.68"
 
 detekt = "1.23.4"
 detektCompose = "0.3.8"
@@ -18,12 +18,17 @@ detektEygraber = "1.0.11"
 
 kotlin = "1.9.22"
 
+kotlinInject = "0.7.0-SNAPSHOT"
+
 kotlinx-coroutines = "1.8.0-RC2"
 
-ktlint = "1.1.0"
+ksp = "1.9.22-1.0.16"
+
+ktlint = "1.1.1"
 
 [plugins]
 conventions = { id = "com.eygraber.conventions", version.ref = "conventions" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 [libraries]
 android-desugar = "com.android.tools:desugar_jdk_libs:2.0.4"
@@ -51,9 +56,12 @@ kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutine
 kotlinx-immutableCollections = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7"
 kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2"
 
-kotlinDurationExtensions = "com.eygraber:kotlin-duration-extensions:1.1.1"
+kotlinInject-compiler = { module = "me.tatarka.inject:kotlin-inject-compiler-ksp", version.ref = "kotlinInject" }
+kotlinInject-runtime = { module = "me.tatarka.inject:kotlin-inject-runtime", version.ref = "kotlinInject" }
 
 # not actually used; just here so renovate picks it up
 ktlint = { module = "com.pinterest.ktlint:ktlint-bom", version.ref = "ktlint" }
 
-portalCompose = "com.eygraber:portal-compose:0.9.28"
+portalCompose = "com.eygraber:portal-compose:0.9.29-SNAPSHOT"
+
+vice-portal = "com.eygraber:vice-portal:0.0.1-SNAPSHOT"
