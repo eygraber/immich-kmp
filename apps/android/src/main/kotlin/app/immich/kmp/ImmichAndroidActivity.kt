@@ -8,21 +8,22 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion as ComposeColor
+import app.immich.kmp.ui.session.UiSessionComponent
+import app.immich.kmp.ui.session.create
 
 class ImmichAndroidActivity : AppCompatActivity() {
+  private val uiSessionComponent by lazy {
+    val app = requireNotNull(applicationContext as? ImmichAndroidApplication) {
+      "applicationContext must be a ImmichApplication"
+    }
+
+    UiSessionComponent.create(
+      app.appComponent,
+    )
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     enableEdgeToEdge()
 
@@ -31,21 +32,7 @@ class ImmichAndroidActivity : AppCompatActivity() {
     setContent {
       SystemUiController()
 
-      MaterialTheme(
-        colorScheme = when {
-          isSystemInDarkTheme() -> darkColorScheme(background = ComposeColor.Black)
-          else -> lightColorScheme()
-        },
-      ) {
-        Scaffold { contentPadding ->
-          Box(
-            modifier = Modifier.fillMaxSize().padding(contentPadding),
-            contentAlignment = Alignment.Center,
-          ) {
-            Text(text = "Hello, world!")
-          }
-        }
-      }
+      uiSessionComponent.uiSession.Main()
     }
   }
 }

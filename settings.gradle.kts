@@ -53,12 +53,19 @@ dependencyResolutionManagement {
 rootProject.name = "immich-kmp"
 
 plugins {
-  id("com.eygraber.conventions.settings") version "0.0.64"
+  id("com.eygraber.conventions.settings") version "0.0.68"
   id("com.gradle.enterprise") version "3.16.1"
 }
 
-include("apps:android")
-include("icons")
+include(":android")
+include(":apps:android")
+include(":apps:desktop")
+include(":apps:webJs")
+include(":apps:webWasm")
+include(":di-platform-components")
+include(":di-scopes")
+include(":icons")
+include(":ui-session")
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 

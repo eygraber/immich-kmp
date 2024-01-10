@@ -45,6 +45,11 @@ gradleConventionsDefaults {
 }
 
 gradleConventionsKmpDefaults {
+  webOptions = KmpTarget.WebOptions(
+    isNodeEnabled = false,
+    isBrowserEnabled = true,
+  )
+
   targets(
     KmpTarget.Android,
     KmpTarget.Js,
