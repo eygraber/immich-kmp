@@ -1,5 +1,6 @@
 package app.immich.kmp.screens.hello.world
 
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,13 +19,24 @@ import me.tatarka.inject.annotations.Inject
 internal class HelloWorldView : ViceView<Intent, ViewState> {
   @Composable
   override fun Render(state: ViewState, onIntent: (Intent) -> Unit) {
-    Column(
-      modifier = Modifier.fillMaxSize(),
-      verticalArrangement = Arrangement.Center,
-      horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-      Image(ImmichLogoVector, contentDescription = "Immich Logo")
-      Text(text = "Hello, world!")
-    }
+    HelloWorld()
   }
+}
+
+@Composable
+private fun HelloWorld() {
+  Column(
+    modifier = Modifier.fillMaxSize(),
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally,
+  ) {
+    Image(ImmichLogoVector, contentDescription = "Immich Logo")
+    Text(text = "Hello, world!")
+  }
+}
+
+@Preview
+@Composable
+private fun HelloWorldPreview() {
+  HelloWorld()
 }

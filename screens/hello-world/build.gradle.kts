@@ -25,6 +25,7 @@ kotlin {
         implementation(projects.core)
         implementation(projects.icons)
         implementation(projects.router)
+        implementation(projects.uiPreview)
       }
     }
   }
