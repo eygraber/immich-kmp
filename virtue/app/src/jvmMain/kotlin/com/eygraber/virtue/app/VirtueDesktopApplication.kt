@@ -18,6 +18,7 @@ import com.eygraber.virtue.di.components.create
 import com.eygraber.virtue.session.BaseVirtueSessionComponent
 import com.eygraber.virtue.session.GenericVirtueSessionComponent
 import com.eygraber.virtue.session.VirtueSessionParams
+import com.eygraber.virtue.theme.ThemeSetting
 
 public fun <A : AppComponent, S : GenericVirtueSessionComponent> virtueApplication(
   appComponentFactory: (VirtueAppComponent) -> A,
@@ -25,6 +26,7 @@ public fun <A : AppComponent, S : GenericVirtueSessionComponent> virtueApplicati
   config: DesktopVirtueConfig,
   darkColorScheme: ColorScheme = darkColorScheme(),
   lightColorScheme: ColorScheme = lightColorScheme(),
+  defaultThemeSetting: ThemeSetting = ThemeSetting.System,
 ) {
   val virtuePlatformComponent: VirtuePlatformComponent =
     VirtuePlatformComponent.create()
@@ -53,6 +55,11 @@ public fun <A : AppComponent, S : GenericVirtueSessionComponent> virtueApplicati
   }
 
   application {
+    InitializationEffect(
+      themeSettings = appComponent.virtueAppComponent.themeSettings,
+      defaultThemeSetting = defaultThemeSetting,
+    )
+
     val sessions by sessionManager.sessions.collectAsState()
     for(sessionEntry in sessions) {
       val sessionComponent = sessionEntry.sessionComponent

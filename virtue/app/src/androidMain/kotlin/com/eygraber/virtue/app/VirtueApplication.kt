@@ -7,6 +7,7 @@ import com.eygraber.virtue.config.VirtueConfig
 import com.eygraber.virtue.di.components.AppComponent
 import com.eygraber.virtue.di.components.VirtueAppComponent
 import com.eygraber.virtue.di.components.VirtuePlatformComponent
+import com.eygraber.virtue.theme.ThemeSetting
 
 public interface VirtueApplication<A : AppComponent> {
   public val virtuePlatformComponent: VirtuePlatformComponent
@@ -17,4 +18,12 @@ public interface VirtueApplication<A : AppComponent> {
 
   public val darkColorScheme: ColorScheme get() = darkColorScheme()
   public val lightColorScheme: ColorScheme get() = lightColorScheme()
+
+  public val defaultThemeSetting: ThemeSetting get() = ThemeSetting.System
+
+  public suspend fun initialize() {
+    virtueAppComponent.themeSettings.initialize(
+      default = defaultThemeSetting,
+    )
+  }
 }
