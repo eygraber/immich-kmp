@@ -1,30 +1,22 @@
 package app.immich.kmp
 
-import android.app.Application
-import app.immich.kmp.di.platform.components.AndroidComponent
-import app.immich.kmp.di.platform.components.AndroidSystemServiceComponent
-import app.immich.kmp.di.platform.components.AppComponent
-import app.immich.kmp.di.platform.components.PlatformComponent
-import app.immich.kmp.di.platform.components.create
+import androidx.compose.material3.ColorScheme
+import app.immich.kmp.core.ImmichAppComponent
+import app.immich.kmp.core.create
+import app.immich.kmp.theme.ImmichTheme
+import com.eygraber.virtue.app.VirtueAndroidApplication
+import com.eygraber.virtue.config.AndroidVirtueConfig
 
-class ImmichAndroidApplication : Application() {
-  private val androidComponent by lazy {
-    AndroidComponent.create(applicationContext)
-  }
-
-  private val androidSystemServiceComponent by lazy {
-    AndroidSystemServiceComponent.create(androidComponent)
-  }
-
-  private val platformComponent by lazy {
-    PlatformComponent.create(
-      systemServiceComponent = androidSystemServiceComponent,
+class ImmichAndroidApplication : VirtueAndroidApplication<ImmichAppComponent>() {
+  override fun createAppComponent(): ImmichAppComponent =
+    ImmichAppComponent.create(
+      virtueAppComponent = virtueAppComponent,
     )
-  }
 
-  internal val appComponent by lazy {
-    AppComponent.create(
-      platformComponent = platformComponent,
-    )
-  }
+  override val config = AndroidVirtueConfig(
+    appName = APP_NAME,
+  )
+
+  override val darkColorScheme: ColorScheme = ImmichTheme.darkColorScheme
+  override val lightColorScheme: ColorScheme = ImmichTheme.lightColorScheme
 }

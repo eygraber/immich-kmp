@@ -53,19 +53,32 @@ dependencyResolutionManagement {
 rootProject.name = "immich-kmp"
 
 plugins {
-  id("com.eygraber.conventions.settings") version "0.0.68"
+  id("com.eygraber.conventions.settings") version "0.0.69"
   id("com.gradle.enterprise") version "3.16.1"
 }
 
-include(":android")
 include(":apps:android")
 include(":apps:desktop")
+include(":apps:shared")
 include(":apps:webJs")
 include(":apps:webWasm")
-include(":di-platform-components")
-include(":di-scopes")
+include(":core")
 include(":icons")
-include(":ui-session")
+include(":router")
+include(":screens:hello-world")
+include(":theme")
+include(":virtue:android")
+include(":virtue:app")
+include(":virtue:back-press-dispatch")
+include(":virtue:config")
+include(":virtue:di-components")
+include(":virtue:di-scopes")
+include(":virtue:history")
+include(":virtue:platform")
+include(":virtue:session")
+include(":virtue:session-state")
+include(":virtue:theme")
+include(":virtue:theme-compose")
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 

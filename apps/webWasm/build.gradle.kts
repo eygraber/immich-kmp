@@ -32,7 +32,9 @@ kotlin {
   sourceSets {
     wasmJsMain {
       dependencies {
-        implementation(projects.uiSession)
+        implementation(projects.apps.shared)
+        implementation(projects.theme)
+        implementation(projects.virtue.app)
 
         implementation(compose.material3)
       }

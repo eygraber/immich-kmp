@@ -51,12 +51,10 @@ android {
   dependencies {
     coreLibraryDesugaring(libs.android.desugar)
 
-    implementation(projects.uiSession)
+    implementation(projects.apps.shared)
+    implementation(projects.theme)
+    implementation(projects.virtue.app)
 
-    implementation(compose.material3)
-
-    implementation(libs.androidx.activity)
-    implementation(libs.androidx.activityCompose)
     implementation(libs.androidx.appCompat)
   }
 }
