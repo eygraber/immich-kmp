@@ -15,6 +15,7 @@ import com.eygraber.virtue.di.components.VirtueWebPlatformComponent
 import com.eygraber.virtue.di.components.create
 import com.eygraber.virtue.session.BaseVirtueSessionComponent
 import com.eygraber.virtue.session.GenericVirtueSessionComponent
+import com.eygraber.virtue.theme.ThemeSetting
 import org.jetbrains.skiko.wasm.onWasmReady
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -25,6 +26,7 @@ public fun <A : AppComponent, S : GenericVirtueSessionComponent> virtueApplicati
   title: String = config.appName,
   darkColorScheme: ColorScheme = darkColorScheme(),
   lightColorScheme: ColorScheme = lightColorScheme(),
+  defaultThemeSetting: ThemeSetting = ThemeSetting.System,
 ) {
   val webPlatformComponent = VirtueWebPlatformComponent.create()
 
@@ -50,6 +52,11 @@ public fun <A : AppComponent, S : GenericVirtueSessionComponent> virtueApplicati
 
   onWasmReady {
     CanvasBasedWindow(title) {
+      InitializationEffect(
+        themeSettings = appComponent.virtueAppComponent.themeSettings,
+        defaultThemeSetting = defaultThemeSetting,
+      )
+
       WithBackPressDispatching(
         onBackPressedDispatcher = sessionComponent.onBackPressedDispatcher,
       ) {
