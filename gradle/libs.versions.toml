@@ -1,18 +1,19 @@
 [versions]
-android-plugin = "8.3.0-beta01"
+android-plugin = "8.3.0"
 
 android-sdk-compile = "34"
 android-sdk-target = "34"
 android-sdk-min = "28"
 
 androidx-activity = "1.8.2"
-androidx-core = "1.12.0"
 
-composeJetbrains = "1.6.0-alpha01"
+atomicfu = "0.23.2"
 
-conventions = "0.0.68"
+composeJetbrains = "1.6.0"
 
-detekt = "1.23.4"
+conventions = "0.0.69"
+
+detekt = "1.23.5"
 detektCompose = "0.3.8"
 detektEygraber = "1.0.11"
 
@@ -20,41 +21,39 @@ kotlin = "1.9.22"
 
 kotlinInject = "0.7.0-SNAPSHOT"
 
-kotlinx-coroutines = "1.8.0-RC2"
+kotlinx-coroutines = "1.8.0"
 
-ksp = "1.9.22-1.0.16"
+ksp = "1.9.22-1.0.18"
 
-ktlint = "1.1.1"
+ktlint = "1.2.1"
 
 [plugins]
 conventions = { id = "com.eygraber.conventions", version.ref = "conventions" }
+dependencyAnalysis = { id = "com.autonomousapps.dependency-analysis", version = "1.30.0" }
+kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 [libraries]
 android-desugar = "com.android.tools:desugar_jdk_libs:2.0.4"
 
-androidx-activity = { module = "androidx.activity:activity-ktx", version.ref = "androidx-activity" }
 androidx-activityCompose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
-androidx-annotations = "androidx.annotation:annotation:1.7.1"
 androidx-appCompat = "androidx.appcompat:appcompat:1.6.1"
-androidx-core = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
 
 buildscript-android = { module = "com.android.tools.build:gradle", version.ref = "android-plugin" }
-buildscript-androidCacheFix = { module = "gradle.plugin.org.gradle.android:android-cache-fix-gradle-plugin", version = "3.0" }
+buildscript-androidCacheFix = { module = "gradle.plugin.org.gradle.android:android-cache-fix-gradle-plugin", version = "3.0.1" }
+buildscript-atomicfu = { module = "org.jetbrains.kotlinx:atomicfu-gradle-plugin", version.ref = "atomicfu" }
 buildscript-composeJetbrains = { module = "org.jetbrains.compose:compose-gradle-plugin", version.ref = "composeJetbrains" }
 buildscript-detekt = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
 buildscript-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 
-compose-compilerJetbrains = "org.jetbrains.compose.compiler:compiler:1.5.7.1"
+compose-compilerJetbrains = "org.jetbrains.compose.compiler:compiler:1.5.8.1"
 
 detektCompose = { module = "io.nlopez.compose.rules:detekt", version.ref = "detektCompose" }
 detektEygraber-formatting = { module = "com.eygraber.detekt.rules:formatting", version.ref = "detektEygraber" }
 detektEygraber-style = { module = "com.eygraber.detekt.rules:style", version.ref = "detektEygraber" }
 
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
-kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
-kotlinx-immutableCollections = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7"
-kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2"
+kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3"
 
 kotlinInject-compiler = { module = "me.tatarka.inject:kotlin-inject-compiler-ksp", version.ref = "kotlinInject" }
 kotlinInject-runtime = { module = "me.tatarka.inject:kotlin-inject-runtime", version.ref = "kotlinInject" }
@@ -62,6 +61,6 @@ kotlinInject-runtime = { module = "me.tatarka.inject:kotlin-inject-runtime", ver
 # not actually used; just here so renovate picks it up
 ktlint = { module = "com.pinterest.ktlint:ktlint-bom", version.ref = "ktlint" }
 
-portalCompose = "com.eygraber:portal-compose:0.9.29-SNAPSHOT"
+portal-compose = "com.eygraber:portal-compose:0.9.30-SNAPSHOT"
 
 vice-portal = "com.eygraber:vice-portal:0.0.1-SNAPSHOT"
