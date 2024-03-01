@@ -6,6 +6,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.ui.window.ApplicationScope
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import com.eygraber.virtue.back.press.dispatch.WithBackPressDispatching
@@ -24,6 +25,7 @@ public fun <A : AppComponent, S : GenericVirtueSessionComponent> virtueApplicati
   appComponentFactory: (VirtueAppComponent) -> A,
   initialSessionComponentFactory: (A, VirtuePlatformSessionComponent) -> S,
   config: DesktopVirtueConfig,
+  onAllSessionsClosed: ApplicationScope.() -> Unit = { exitApplication() },
   darkColorScheme: ColorScheme = darkColorScheme(),
   lightColorScheme: ColorScheme = lightColorScheme(),
   defaultThemeSetting: ThemeSetting = ThemeSetting.System,
@@ -68,7 +70,7 @@ public fun <A : AppComponent, S : GenericVirtueSessionComponent> virtueApplicati
         Window(
           onCloseRequest = {
             if(sessions.size == 1) {
-              exitApplication()
+              onAllSessionsClosed()
             }
             else {
               sessionManager.removeSession(sessionComponent)
