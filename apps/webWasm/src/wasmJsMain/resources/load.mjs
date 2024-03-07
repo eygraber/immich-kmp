@@ -1,4 +1,4 @@
-import { instantiate } from './immich-kmp-wasm.uninstantiated.mjs';
+import { instantiate } from 'immich-kmp-wasm.uninstantiated.mjs';
 
 await wasmSetup;
 
