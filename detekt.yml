@@ -244,6 +244,7 @@ formatting-eygraber:
 naming:
   active: true
   BooleanPropertyNaming:
+    allowedPattern: '(^((is|can|has|needs|does|are|was|asBoolean|should|DEBUG|ret)|.*Has.*|.*Needs.*)|.*Matches$|.*Exists$)'
     active: true
   ClassNaming:
     active: true
@@ -312,7 +313,7 @@ naming:
   TopLevelPropertyNaming:
     active: true
     excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**']
-    constantPattern: '[A-Z][_A-Z0-9]*'
+    constantPattern: '[A-Z]([_A-Z0-9]*|[A-Za-z0-9]*)'
     propertyPattern: '[A-Za-z][A-Za-z0-9]*'
     privatePropertyPattern: '_?[A-Za-z][A-Za-z0-9]*'
   VariableMaxLength:
@@ -521,7 +522,7 @@ style:
     active: true
   MultilineRawStringIndentation:
     active: true
-    indentSize: 4
+    indentSize: 0
   NestedClassesVisibility:
     active: true
   NewLineAtEndOfFile:
