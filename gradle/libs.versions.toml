@@ -30,6 +30,7 @@ ktlint = "1.2.1"
 [plugins]
 conventions = { id = "com.eygraber.conventions", version.ref = "conventions" }
 dependencyAnalysis = { id = "com.autonomousapps.dependency-analysis", version = "1.30.0" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 

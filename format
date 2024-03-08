@@ -42,6 +42,15 @@ for arg in "$@"; do
   fi
 done
 
+check_module_generator=false
+for arg in "$@"; do
+  if [ "$arg" == "--check-module-generator" ]; then
+    check_module_generator=true
+    set -- "${@//--check-module-generator/}"
+    break
+  fi
+done
+
 args=()
 
 if [ "$should_format" = true ]; then
@@ -50,4 +59,9 @@ fi
 
 args+=("$@")
 
-"$destination_dir/$file_name" **/*.kt **/*.kts \!**/build/** \!Dangerfile.df.kts --color --color-name=YELLOW "${args[@]}"
+if [ "$check_module_generator" = true ]; then
+  cd .support
+  "../$destination_dir/$file_name" **/*.kt **/*.kts \!**/build/** \!Dangerfile.df.kts --color --color-name=YELLOW "${args[@]}"
+else
+  "$destination_dir/$file_name" **/*.kt **/*.kts \!**/build/** \!Dangerfile.df.kts --color --color-name=YELLOW "${args[@]}"
+fi
