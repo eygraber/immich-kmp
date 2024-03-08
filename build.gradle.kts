@@ -31,11 +31,11 @@ gradleConventionsDefaults {
     )
   }
 
-  // compose {
-  //   multiplatform(
-  //     compilerOverride = libs.compose.compilerJetbrains,
-  //   )
-  // }
+  compose {
+    multiplatform(
+      compilerOverride = libs.compose.compilerJetbrains,
+    )
+  }
 
   detekt {
     plugins(libs.detektCompose)
