@@ -40,6 +40,11 @@ android {
     }
   }
 
+  lint {
+    checkDependencies = true
+    checkReleaseBuilds = false
+  }
+
   compileOptions {
     isCoreLibraryDesugaringEnabled = true
   }

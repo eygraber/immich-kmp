@@ -1,12 +1,14 @@
 package com.eygraber.virtue.history
 
+import com.eygraber.uri.Uri
 import com.eygraber.virtue.di.scopes.SessionSingleton
 import com.eygraber.virtue.session.state.VirtueSessionStateManager
 import kotlinx.atomicfu.atomic
 import kotlinx.atomicfu.update
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -22,29 +24,36 @@ public class TimelineHistory(
     val items: List<History.Item>,
     val current: Int,
   ) : List<History.Item> by items {
-    val currentItem get() = items[current]
+    val currentItem get() = if(current == -1) null else items[current]
 
     inline fun mutate(mutate: Timeline.() -> Timeline): Timeline = this.mutate()
   }
 
-  internal val isRestored: Boolean = TIMELINE_KEY in sessionStateManager
-
   private val timeline = atomic(loadInitialTimeline())
   private val timelineFlow = MutableStateFlow(timeline.value)
 
-  override val currentItem: History.Item get() = timeline.value.currentItem
+  override val currentItem: History.Item? get() = timeline.value.currentItem
 
   override val canGoBack: Boolean get() = timeline.value.current > 0
   override val canGoForward: Boolean get() = timeline.value.current < timeline.value.lastIndex
 
-  override val updates: Flow<History.Item> = timelineFlow.map { it.currentItem }
+  override val changes: Flow<History.Item> = timelineFlow.filter { it.isNotEmpty() }.mapNotNull { it.currentItem }
 
-  override fun initialize() {}
+  override fun initialize(initialUri: Uri) {
+    val restoredCurrentItem = currentItem
+    // if currentItem == null, there was no restoration, so push initialUri
+    // if currentItem == initialUri, the app was recreated and we don't need to push
+    // if currentItem != initialUri, the user navigated within the session outside of the app so we push it
+    // e.g. they changed the browser url which is considered the same session but a new invocation of the app
+    if(restoredCurrentItem == null || restoredCurrentItem.payload.uri != initialUri) {
+      push(History.Item.Payload(initialUri))
+    }
+  }
 
   override fun destroy() {}
 
   override fun push(payload: History.Item.Payload): History.Item {
-    mutateTimeline {
+    val newTimeline = mutateTimeline {
       val newCurrent = current + 1
 
       val newItem = History.Item(
@@ -52,13 +61,17 @@ public class TimelineHistory(
         payload = payload,
       )
 
-      if(current == items.lastIndex) {
+      if(current == -1 || current == items.lastIndex) {
         copy(
           items = items + newItem,
           current = newCurrent,
         )
       }
       else {
+        val currentItem = requireNotNull(currentItem) {
+          "currentItem shouldn't be able to be null"
+        }
+
         // pushing prunes the timeline and we start a new future
         // we also remove the session state for the pruned history items
         sessionStateManager.remove(currentItem.payload.stateKey)
@@ -83,11 +96,13 @@ public class TimelineHistory(
       }
     }
 
-    return timeline.value.currentItem
+    return requireNotNull(newTimeline.currentItem) {
+      "currentItem shouldn't be able to be null"
+    }
   }
 
   override fun update(payload: History.Item.Payload): History.Item {
-    mutateTimeline {
+    val updatedTimeline = mutateTimeline {
       copy(
         items = items.mapIndexed { index, item ->
           if(index != current) {
@@ -100,7 +115,9 @@ public class TimelineHistory(
       )
     }
 
-    return timeline.value.currentItem
+    return requireNotNull(updatedTimeline.currentItem) {
+      "currentItem shouldn't be able to be null"
+    }
   }
 
   override fun move(delta: Int) {
@@ -116,19 +133,11 @@ public class TimelineHistory(
   }
 
   override fun moveBack() {
-    mutateTimeline {
-      copy(
-        current = (current - 1).coerceAtLeast(0),
-      )
-    }
+    move(-1)
   }
 
   override fun moveForward() {
-    mutateTimeline {
-      copy(
-        current = (current + 1).coerceAtMost(items.lastIndex),
-      )
-    }
+    move(1)
   }
 
   override fun onBackPressed() {
@@ -142,11 +151,11 @@ public class TimelineHistory(
         runCatching<Timeline> { Json.decodeFromString(storedTimeline) }.getOrNull()
       }
       ?: Timeline(
-        items = listOf(History.Item(index = 0, payload = History.Item.Payload(urlPath = "/"))),
-        current = 0,
+        items = emptyList(),
+        current = -1,
       )
 
-  private inline fun mutateTimeline(mutate: Timeline.() -> Timeline) {
+  private inline fun mutateTimeline(mutate: Timeline.() -> Timeline): Timeline {
     val current = timeline.value
     timeline.update { prev ->
       prev.mutate(mutate)
@@ -157,6 +166,8 @@ public class TimelineHistory(
       timelineFlow.value = new
       storeTimeline()
     }
+
+    return new
   }
 
   private fun storeTimeline() {

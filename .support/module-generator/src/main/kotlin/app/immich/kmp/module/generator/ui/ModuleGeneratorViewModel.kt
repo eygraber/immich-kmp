@@ -9,18 +9,20 @@ import app.immich.kmp.module.generator.addModuleToSettings
 import app.immich.kmp.module.generator.addRoute
 import app.immich.kmp.module.generator.addToPortalFactory
 import app.immich.kmp.module.generator.createModule
-import app.immich.kmp.module.generator.utils.kebabCaseToCamelCase
+import app.immich.kmp.module.generator.utils.camelCaseToDotCase
+import app.immich.kmp.module.generator.utils.camelCaseToKebabCase
 import java.io.File
 import kotlin.system.exitProcess
 
 private const val PackageNamePrefix = "app.immich.kmp.features."
 
-private val ModuleNameRegex = Regex("([a-z]+(-))*[a-z]+")
+private val ModuleNameRegex = Regex("^([a-z]+(-))*[a-z]+(?::([a-z]+(-))*[a-z]+)*\$")
 private val PackageNameRegex = Regex("^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)*[a-z0-9_]*\$")
 private val FeatureNameRegex = Regex("[A-Z][A-Za-z0-9]*")
 
 internal enum class PortalType {
   Admin,
+  Host,
   Main,
   Root,
 }
@@ -38,8 +40,8 @@ internal class ModuleGeneratorViewModel {
   private val featuresDir = File(projectDir, "features")
 
   var isProjectDirValid = projectDir.name == "immich-kmp"
-  var shouldInferPackageNameFromModuleName by mutableStateOf(true)
-  var shouldInferFeatureNameFromModuleName by mutableStateOf(true)
+  var shouldInferModuleName by mutableStateOf(true)
+  var shouldInferPackageName by mutableStateOf(true)
   var shouldGeneratePreview by mutableStateOf(true)
 
   // TODO: Default generating a PreviewParameterProvider to true when KMP supports it
@@ -47,14 +49,15 @@ internal class ModuleGeneratorViewModel {
   val shouldGeneratePreviewParameterProvider by derivedStateOf {
     shouldGeneratePreviewParameterProviderInternal && shouldGeneratePreview
   }
+  var featureName by mutableStateOf("")
+  var featureNameError by mutableStateOf<String?>(null)
+  var portalType by mutableStateOf(PortalType.Main)
   var doesModuleAlreadyExist by mutableStateOf(false)
+  var moduleNamePrefix by mutableStateOf(":features:${portalType.name.lowercase()}:")
   var moduleName by mutableStateOf("")
   var moduleNameError by mutableStateOf<String?>(null)
   var packageName by mutableStateOf(PackageNamePrefix)
   var packageNameError by mutableStateOf<String?>(null)
-  var featureName by mutableStateOf("")
-  var featureNameError by mutableStateOf<String?>(null)
-  var portalType by mutableStateOf(PortalType.Main)
 
   val isGenerationEnabled by derivedStateOf {
     moduleName.isNotEmpty() && moduleNameError == null &&
@@ -62,19 +65,24 @@ internal class ModuleGeneratorViewModel {
       featureName.isNotEmpty() && featureNameError == null
   }
 
-  fun onInferPackageNameFromModuleNameChange(newValue: Boolean) {
-    shouldInferPackageNameFromModuleName = newValue
+  fun onInferPackageNameChange(newValue: Boolean) {
+    shouldInferPackageName = newValue
 
     if(newValue) {
-      onPackageNameChange(generatePackageNameFromModuleName())
+      onPackageNameChange(generateInferredPackageName())
     }
   }
 
-  fun onInferFeatureNameFromModuleNameChange(newValue: Boolean) {
-    shouldInferFeatureNameFromModuleName = newValue
+  fun onInferModuleNameChange(newValue: Boolean) {
+    shouldInferModuleName = newValue
 
+    val portalTypeName = portalType.name.lowercase()
+    updateModuleNamePrefix()
     if(newValue) {
-      onFeatureNameChange(generateFeatureNameFromModuleName())
+      onModuleNameChange(generateInferredModuleName())
+    }
+    else {
+      onModuleNameChange("$portalTypeName:${moduleName.removePrefix(portalTypeName).removePrefix(":")}")
     }
   }
 
@@ -86,26 +94,56 @@ internal class ModuleGeneratorViewModel {
     shouldGeneratePreviewParameterProviderInternal = newValue
   }
 
+  fun onFeatureNameChange(newFeatureName: String) {
+    featureName = newFeatureName.trim()
+
+    val isValid = featureName.matches(FeatureNameRegex)
+
+    if(isValid) {
+      if(shouldInferPackageName) {
+        onPackageNameChange(generateInferredPackageName())
+      }
+
+      if(shouldInferModuleName) {
+        onModuleNameChange(generateInferredModuleName())
+      }
+    }
+
+    featureNameError = when {
+      isValid -> null
+
+      else -> when {
+        featureName.isBlank() -> "Feature name must not be empty"
+
+        else ->
+          """
+          |Feature name:
+          |  • must begin with an uppercase character
+          |  • can only contain characters or digits
+          """.trimMargin()
+      }
+    }
+  }
+
+  fun onPortalTypeChange(newPortalType: PortalType) {
+    portalType = newPortalType
+    updateModuleNamePrefix()
+    if(shouldInferPackageName) {
+      onPackageNameChange(generateInferredPackageName())
+    }
+  }
+
   fun onModuleNameChange(newModuleName: String) {
     moduleName = newModuleName.trim()
 
     val isValid = moduleName.matches(ModuleNameRegex)
 
-    if(isValid) {
-      val moduleDir = File(featuresDir, moduleName)
-
-      doesModuleAlreadyExist = moduleDir.exists() && moduleDir.isDirectory
-
-      if(shouldInferPackageNameFromModuleName) {
-        onPackageNameChange(generatePackageNameFromModuleName())
+    doesModuleAlreadyExist = when {
+      isValid -> with(File(featuresDir, "${portalType.name}/$moduleName")) {
+        exists() && isDirectory
       }
 
-      if(shouldInferFeatureNameFromModuleName) {
-        onFeatureNameChange(generateFeatureNameFromModuleName())
-      }
-    }
-    else {
-      doesModuleAlreadyExist = false
+      else -> false
     }
 
     moduleNameError = when {
@@ -148,31 +186,6 @@ internal class ModuleGeneratorViewModel {
     }
   }
 
-  fun onFeatureNameChange(newFeatureName: String) {
-    featureName = newFeatureName.trim()
-
-    val isValid = featureName.matches(FeatureNameRegex)
-
-    featureNameError = when {
-      isValid -> null
-
-      else -> when {
-        featureName.isBlank() -> "Feature name must not be empty"
-
-        else ->
-          """
-          |Feature name:
-          |  • must begin with an uppercase character
-          |  • can only contain characters or digits
-          """.trimMargin()
-      }
-    }
-  }
-
-  fun onPortalTypeChange(newPortalType: PortalType) {
-    portalType = newPortalType
-  }
-
   fun generate() {
     createModule(
       projectDir = projectDir,
@@ -193,6 +206,7 @@ internal class ModuleGeneratorViewModel {
       addToPortalFactory(
         projectDir = projectDir,
         packageName = packageName,
+        portalType = portalType,
         portalName = featureName,
       )
     }
@@ -206,6 +220,15 @@ internal class ModuleGeneratorViewModel {
     exitProcess(0)
   }
 
-  private fun generatePackageNameFromModuleName() = "$PackageNamePrefix${moduleName.replace("-", ".")}"
-  private fun generateFeatureNameFromModuleName() = moduleName.kebabCaseToCamelCase(upperCamelCase = true)
+  private fun generateInferredPackageName() =
+    "$PackageNamePrefix${portalType.name.lowercase()}.${featureName.camelCaseToDotCase()}"
+
+  private fun generateInferredModuleName() = featureName.camelCaseToKebabCase()
+
+  private fun updateModuleNamePrefix() {
+    moduleNamePrefix = when {
+      shouldInferModuleName -> ":features:${portalType.name.lowercase()}:"
+      else -> ":features:"
+    }
+  }
 }

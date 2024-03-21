@@ -8,6 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import com.eygraber.uri.Uri
 import com.eygraber.virtue.di.components.AppComponent
 import com.eygraber.virtue.di.components.VirtuePlatformSessionComponent
 import com.eygraber.virtue.di.components.create
@@ -48,6 +49,8 @@ public abstract class VirtueAndroidActivity<A, out S> : ComponentActivity()
     virtuePlatformSessionComponent: VirtuePlatformSessionComponent,
   ): S
 
+  protected abstract val defaultUri: Uri
+
   override fun onCreate(savedInstanceState: Bundle?) {
     savedInstanceState?.let(virtueSessionComponent.stateManager::onRestoreState)
 
@@ -67,6 +70,7 @@ public abstract class VirtueAndroidActivity<A, out S> : ComponentActivity()
       virtueSessionComponent.session.SessionUi(
         darkColorScheme = virtueApp.darkColorScheme,
         lightColorScheme = virtueApp.lightColorScheme,
+        defaultUri = defaultUri,
       )
     }
   }

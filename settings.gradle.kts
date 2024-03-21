@@ -53,7 +53,7 @@ dependencyResolutionManagement {
 rootProject.name = "immich-kmp"
 
 plugins {
-  id("com.eygraber.conventions.settings") version "0.0.69"
+  id("com.eygraber.conventions.settings") version "0.0.70"
   id("com.gradle.enterprise") version "3.16.1"
 }
 
@@ -63,9 +63,34 @@ include(":apps:shared")
 include(":apps:webJs")
 include(":apps:webWasm")
 include(":core")
+include(":features:admin:external-libraries")
+include(":features:admin:jobs")
+include(":features:admin:repair")
+include(":features:admin:server-stats")
+include(":features:admin:settings")
+include(":features:admin:user-management")
+include(":features:host:admin")
+include(":features:host:main")
+include(":features:main:albums")
+include(":features:main:archive")
+include(":features:main:explore")
+include(":features:main:favorites")
+include(":features:main:library")
+include(":features:main:map")
+include(":features:main:people")
+include(":features:main:photos")
+include(":features:main:places")
+include(":features:main:sharing")
+include(":features:main:trash")
+include(":features:main:user-settings")
+include(":features:root:album")
+include(":features:root:login")
+include(":features:root:memory")
+include(":features:root:photo")
+include(":features:root:four-oh-four")
+include(":features:root:search")
 include(":icons")
 include(":router")
-include(":screens:hello-world")
 include(":theme")
 include(":ui-preview")
 include(":virtue:android")

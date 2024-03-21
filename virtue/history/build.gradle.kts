@@ -33,6 +33,7 @@ kotlin {
   sourceSets {
     commonMain {
       dependencies {
+        implementation(projects.virtue.config)
         implementation(projects.virtue.diScopes)
         implementation(projects.virtue.backPressDispatch)
         api(projects.virtue.sessionState)
@@ -40,6 +41,7 @@ kotlin {
         implementation(libs.kotlinx.coroutines.core)
         implementation(libs.kotlinx.serialization.json)
         implementation(libs.kotlinInject.runtime)
+        api(libs.uri)
       }
     }
   }

@@ -13,8 +13,8 @@ internal fun createModule(
   shouldGeneratePreviewParameterProvider: Boolean,
   portalType: PortalType,
 ) {
-  val featuresDir = File(projectDir, "features")
-  val moduleDir = File(featuresDir, moduleName).apply { mkdir() }
+  val featureDir = File(projectDir, "features")
+  val moduleDir = File(featureDir, moduleName.replace(":", "/")).apply { mkdir() }
   val commonMainDir = File(moduleDir, "src" / "commonMain").apply { mkdirs() }
   val androidDir = File(moduleDir, "src" / "androidMain").apply { mkdirs() }
   val iosDir = File(moduleDir, "src" / "iosMain").apply { mkdirs() }
@@ -51,11 +51,11 @@ internal fun createModule(
         |  defaultKmpTargets(
         |    project = project,
         |  )
-        |  
+        |
         |  kspDependenciesForAllTargets {
         |    ksp(libs.kotlinInject.compiler)
         |  }
-        |  
+        |
         |  sourceSets {
         |    commonMain {
         |      dependencies {
@@ -63,6 +63,8 @@ internal fun createModule(
         |        implementation(projects.router)
         |        implementation(projects.theme)
         |        implementation(projects.uiPreview)
+        |
+        |        implementation(libs.vice.sources)
         |      }
         |    }
         |  }
@@ -84,7 +86,7 @@ internal fun createModule(
     }
   }
 
-  val routeType = "ImmichRoute.${portalType.name}.$featureName"
+  val routeType = "${portalType.name}Route.$featureName"
 
   val portalName = "${featureName}Portal"
   val componentName = "${featureName}Component"
@@ -103,11 +105,11 @@ internal fun createModule(
         |package $packageName
         |
         |import app.immich.kmp.core.ImmichSessionComponent
-        |import app.immich.kmp.core.ImmichSessionScreen
-        |import app.immich.kmp.core.ImmichSessionScreenComponent
-        |import app.immich.kmp.router.ImmichNav
-        |import com.eygraber.virtue.di.scopes.SessionScreenSingleton
-        |import com.eygraber.virtue.session.GenericVirtueScreen
+        |import app.immich.kmp.core.ImmichSessionPortal
+        |import app.immich.kmp.core.ImmichSessionPortalComponent
+        |import app.immich.kmp.router.${portalType.name}Route
+        |import com.eygraber.virtue.di.scopes.SessionPortalSingleton
+        |import com.eygraber.virtue.session.GenericVirtuePortal
         |import me.tatarka.inject.annotations.Component
         |
         |internal typealias Route = $routeType
@@ -121,29 +123,32 @@ internal fun createModule(
         |  operator fun invoke(
         |    route: Route,
         |    parentComponent: ImmichSessionComponent,
-        |  ): GenericVirtueScreen<Route> = $portalName(route, parentComponent)
+        |  ): GenericVirtuePortal<Route> = $portalName(route, parentComponent)
         |}
         |
         |internal class $portalName(
-        |  override val key: Route,
+        |  override val route: Route,
         |  override val parentComponent: ImmichSessionComponent,
-        |) : ImmichSessionScreen<Route, View, Intent, Compositor, Effects, ViewState>() {
-        |  // TODO: https://github.com/evant/kotlin-inject/pull/362
+        |) : ImmichSessionPortal<Route, View, Intent, Compositor, Effects, ViewState>() {
+        |  // https://github.com/evant/kotlin-inject/pull/362
         |  override val component = $componentName.createA(
         |    sessionComponent = parentComponent,
+        |    route = route,
         |  )
         |}
         |
-        |@SessionScreenSingleton
+        |@SessionPortalSingleton
         |@Component
         |internal abstract class $componentName(
         |  @Component override val parentComponent: ImmichSessionComponent,
-        |) : ImmichSessionScreenComponent<View, Intent, Compositor, Effects, ViewState> {
+        |  override val route: Route,
+        |) : ImmichSessionPortalComponent<Route, View, Intent, Compositor, Effects, ViewState> {
         |  companion object
         |}
         |
         |internal expect fun $componentName.Companion.createA(
         |  sessionComponent: ImmichSessionComponent,
+        |  route: Route,
         |): $componentName
         |
         """.trimMargin(),
@@ -160,15 +165,15 @@ internal fun createModule(
         |
         |import androidx.compose.runtime.Composable
         |import com.eygraber.vice.ViceCompositor
-        |import com.eygraber.virtue.di.scopes.SessionScreenSingleton
+        |import com.eygraber.virtue.di.scopes.SessionPortalSingleton
         |import kotlinx.coroutines.flow.Flow
         |import me.tatarka.inject.annotations.Inject
         |
-        |@SessionScreenSingleton
+        |@SessionPortalSingleton
         |@Inject
         |internal class $compositorName : ViceCompositor<Intent, ViewState>() {
         |  @Composable
-        |  override fun composite(intents: Flow<Intent>) = ViewState
+        |  override fun composite() = ViewState
         |}
         |
         """.trimMargin(),
@@ -184,11 +189,11 @@ internal fun createModule(
         |package $packageName
         |
         |import com.eygraber.vice.ViceEffects
-        |import com.eygraber.virtue.di.scopes.SessionScreenSingleton
+        |import com.eygraber.virtue.di.scopes.SessionPortalSingleton
         |import kotlinx.coroutines.CoroutineScope
         |import me.tatarka.inject.annotations.Inject
         |
-        |@SessionScreenSingleton
+        |@SessionPortalSingleton
         |@Inject
         |internal class $effectsName : ViceEffects() {
         |  override fun CoroutineScope.onInitialized() {}
@@ -243,7 +248,7 @@ internal fun createModule(
             |private fun ${featureName}Preview(
             |  @PreviewParameter(ViewStatePreviewProvider::class) state: ViewState
             |) {
-            |  ImmichMaterialTheme {
+            |  ImmichPreviewTheme {
             |    $featureName(
             |      state = state,
             |      onIntent = {},
@@ -259,7 +264,7 @@ internal fun createModule(
             |@Preview
             |@Composable
             |private fun ${featureName}Preview() {
-            |  ImmichMaterialTheme {
+            |  ImmichPreviewTheme {
             |    $featureName(
             |      state = ViewState,
             |      onIntent = {},
@@ -275,7 +280,7 @@ internal fun createModule(
 
       val themeImport = when {
         shouldGeneratePreview || shouldGeneratePreviewParameterProvider ->
-          "app.immich.kmp.theme.ImmichMaterialTheme"
+          "app.immich.kmp.theme.ImmichPreviewTheme"
         else -> null
       }
 
@@ -285,7 +290,7 @@ internal fun createModule(
           listOf(
             "androidx.compose.runtime.Composable",
             "com.eygraber.vice.ViceView",
-            "com.eygraber.virtue.di.scopes.SessionScreenSingleton",
+            "com.eygraber.virtue.di.scopes.SessionPortalSingleton",
             "me.tatarka.inject.annotations.Inject",
           )
         )
@@ -301,7 +306,7 @@ internal fun createModule(
         |
         |$imports
         |
-        |@SessionScreenSingleton
+        |@SessionPortalSingleton
         |@Inject
         |internal class $viewName : ViceView<Intent, ViewState> {
         |  @Composable
@@ -383,7 +388,8 @@ internal fun createModule(
           |
           |internal actual fun $componentName.Companion.createA(
           |  sessionComponent: ImmichSessionComponent,
-          |): $componentName = $componentName.Companion.create(sessionComponent)
+          |  route: Route,
+          |): $componentName = $componentName.Companion.create(sessionComponent, route)
           |
           """.trimMargin(),
         )

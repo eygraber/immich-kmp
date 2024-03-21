@@ -20,21 +20,26 @@ public interface BaseVirtueSessionComponent : HistoryProvider, OnBackPressDispat
 }
 
 @SessionSingleton
-public abstract class VirtueSessionComponent<Component, Key, Router>(
-  screenFactory: (Component, Key) -> GenericVirtueScreen<out Key>,
+public abstract class VirtueSessionComponent<Component, Route, Router>(
+  portalFactory: (Component, Route) -> GenericVirtuePortal<out Route>,
 ) : BaseVirtueSessionComponent
-  where Component : VirtueSessionComponent<Component, Key, Router>,
-        Router : VirtueSessionScreenRouter<Key> {
-  @Provides public fun provideVirtueSessionComponent(): VirtueSessionComponent<Component, Key, Router> = this
+  where Component : VirtueSessionComponent<Component, Route, Router>,
+        Route : VirtueRoute,
+        Router : VirtuePortalRouter<Route> {
+  @Provides public fun provideVirtueSessionComponent(): VirtueSessionComponent<Component, Route, Router> = this
 
-  @get:Provides public val portalManager: ComposePortalManager<Key> = ComposePortalManager()
-
-  @Suppress("UNCHECKED_CAST")
-  @get:Provides public val screenFactory: VirtueScreenFactory<Key> by lazy {
-    VirtueComponentScreenFactory(this as Component, screenFactory)
+  @get:Provides public val portalManager: ComposePortalManager<Route> by lazy {
+    createPortalManager()
   }
 
-  @Provides public abstract fun Router.bind(): VirtueSessionRouter
+  @Suppress("UNCHECKED_CAST")
+  @get:Provides public val portalFactory: VirtuePortalFactory<Route> by lazy {
+    VirtueComponentPortalFactory(this as Component, portalFactory)
+  }
+
+  @Provides public abstract fun Router.bind(): VirtueRouter
+
+  protected open fun createPortalManager(): ComposePortalManager<Route> = ComposePortalManager()
 }
 
 public typealias GenericVirtueSessionComponent = VirtueSessionComponent<*, *, *>

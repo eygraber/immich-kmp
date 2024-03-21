@@ -73,15 +73,15 @@ private fun Generator(viewModel: ModuleGeneratorViewModel) {
   ) {
     Row {
       GeneratorCheckbox(
-        isChecked = viewModel.shouldInferPackageNameFromModuleName,
-        title = "Infer package name from module name",
-        onCheckedChange = viewModel::onInferPackageNameFromModuleNameChange,
+        isChecked = viewModel.shouldInferPackageName,
+        title = "Infer package name",
+        onCheckedChange = viewModel::onInferPackageNameChange,
       )
 
       GeneratorCheckbox(
-        isChecked = viewModel.shouldInferFeatureNameFromModuleName,
-        title = "Infer feature name from module name",
-        onCheckedChange = viewModel::onInferFeatureNameFromModuleNameChange,
+        isChecked = viewModel.shouldInferModuleName,
+        title = "Infer module name",
+        onCheckedChange = viewModel::onInferModuleNameChange,
       )
     }
 
@@ -104,11 +104,29 @@ private fun Generator(viewModel: ModuleGeneratorViewModel) {
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
+      FeatureNameTextField(
+        featureName = viewModel.featureName,
+        featureNameError = viewModel.featureNameError,
+        onValueChange = viewModel::onFeatureNameChange,
+        modifier = Modifier.focusRequester(initialFocusRequester),
+      )
+
+      PortalTypeDropdownMenu(
+        selectedType = viewModel.portalType,
+        onTypeSelected = viewModel::onPortalTypeChange,
+      )
+    }
+
+    Row(
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
       ModuleNameTextField(
+        moduleNamePrefix = viewModel.moduleNamePrefix,
         moduleName = viewModel.moduleName,
         moduleNameError = viewModel.moduleNameError,
+        isModuleEnabled = !viewModel.shouldInferModuleName,
         onValueChange = viewModel::onModuleNameChange,
-        modifier = Modifier.focusRequester(initialFocusRequester),
       )
 
       if(viewModel.doesModuleAlreadyExist) {
@@ -123,20 +141,8 @@ private fun Generator(viewModel: ModuleGeneratorViewModel) {
     PackageNameTextField(
       packageName = viewModel.packageName,
       packageNameError = viewModel.packageNameError,
-      isPackageEnabled = !viewModel.shouldInferPackageNameFromModuleName,
+      isPackageEnabled = !viewModel.shouldInferPackageName,
       onValueChange = viewModel::onPackageNameChange,
-    )
-
-    FeatureNameTextField(
-      featureName = viewModel.featureName,
-      featureNameError = viewModel.featureNameError,
-      isFeatureEnabled = !viewModel.shouldInferFeatureNameFromModuleName,
-      onValueChange = viewModel::onFeatureNameChange,
-    )
-
-    PortalTypeDropdownMenu(
-      selectedType = viewModel.portalType,
-      onTypeSelected = viewModel::onPortalTypeChange,
     )
 
     Button(
@@ -144,63 +150,27 @@ private fun Generator(viewModel: ModuleGeneratorViewModel) {
       enabled = viewModel.isGenerationEnabled,
     ) {
       Text(
-        text = "Generate Module",
+        text = "Generate",
       )
     }
   }
 }
 
 @Composable
-private fun ModuleNameTextField(
-  moduleName: String,
-  moduleNameError: String?,
+private fun FeatureNameTextField(
+  featureName: String,
+  featureNameError: String?,
   onValueChange: (String) -> Unit,
   modifier: Modifier = Modifier,
 ) {
   GeneratorTextField(
-    value = moduleName,
-    error = moduleNameError,
-    label = {
-      Text("Module name:")
-    },
-    onValueChange = onValueChange,
-    modifier = modifier,
-  )
-}
-
-@Composable
-private fun PackageNameTextField(
-  packageName: String,
-  packageNameError: String?,
-  isPackageEnabled: Boolean,
-  onValueChange: (String) -> Unit,
-) {
-  GeneratorTextField(
-    value = packageName,
-    error = packageNameError,
-    enabled = isPackageEnabled,
-    label = {
-      Text("Package name:")
-    },
-    onValueChange = onValueChange,
-  )
-}
-
-@Composable
-private fun FeatureNameTextField(
-  featureName: String,
-  featureNameError: String?,
-  isFeatureEnabled: Boolean,
-  onValueChange: (String) -> Unit,
-) {
-  GeneratorTextField(
     value = featureName,
     error = featureNameError,
-    enabled = isFeatureEnabled,
     label = {
       Text("Feature name:")
     },
     onValueChange = onValueChange,
+    modifier = modifier,
   )
 }
 
@@ -213,7 +183,7 @@ private fun PortalTypeDropdownMenu(
     modifier = Modifier.padding(top = 8.dp),
     verticalAlignment = Alignment.CenterVertically,
   ) {
-    Text("Nav type:", modifier = Modifier.alignByBaseline())
+    Text("Portal type:", modifier = Modifier.alignByBaseline())
 
     var isExpanded by remember { mutableStateOf(false) }
     Box(modifier = Modifier.alignByBaseline()) {
@@ -245,6 +215,44 @@ private fun PortalTypeDropdownMenu(
       }
     }
   }
+}
+
+@Composable
+private fun ModuleNameTextField(
+  moduleNamePrefix: String,
+  moduleName: String,
+  moduleNameError: String?,
+  isModuleEnabled: Boolean,
+  onValueChange: (String) -> Unit,
+) {
+  GeneratorTextField(
+    value = moduleName,
+    error = moduleNameError,
+    enabled = isModuleEnabled,
+    label = {
+      Text("Module name:")
+    },
+    prefix = moduleNamePrefix,
+    onValueChange = onValueChange,
+  )
+}
+
+@Composable
+private fun PackageNameTextField(
+  packageName: String,
+  packageNameError: String?,
+  isPackageEnabled: Boolean,
+  onValueChange: (String) -> Unit,
+) {
+  GeneratorTextField(
+    value = packageName,
+    error = packageNameError,
+    enabled = isPackageEnabled,
+    label = {
+      Text("Package name:")
+    },
+    onValueChange = onValueChange,
+  )
 }
 
 private val ExpandMoreIcon: ImageVector by lazy {
