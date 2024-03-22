@@ -1,5 +1,7 @@
 package app.immich.kmp
 
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
 import app.immich.kmp.core.ImmichAppComponent
 import app.immich.kmp.core.ImmichSessionComponent
 import app.immich.kmp.core.create
@@ -28,6 +30,11 @@ fun main() = virtueApplication(
       mkdirs()
     },
   ),
+  configureInitialSessionParams = { params ->
+    params.copy(
+      minWindowSize = DpSize(400.dp, 400.dp),
+    )
+  },
   darkColorScheme = ImmichTheme.darkColorScheme,
   lightColorScheme = ImmichTheme.lightColorScheme,
   defaultUri = ImmichRoute.RootUri,
