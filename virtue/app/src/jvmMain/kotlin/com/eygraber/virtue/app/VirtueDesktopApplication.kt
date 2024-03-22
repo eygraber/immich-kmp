@@ -3,9 +3,14 @@ package com.eygraber.virtue.app
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
+import androidx.compose.ui.awt.ComposeWindow
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.window.ApplicationScope
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
@@ -21,11 +26,13 @@ import com.eygraber.virtue.session.BaseVirtueSessionComponent
 import com.eygraber.virtue.session.GenericVirtueSessionComponent
 import com.eygraber.virtue.session.VirtueSessionParams
 import com.eygraber.virtue.theme.ThemeSetting
+import java.awt.Dimension
 
 public fun <A : AppComponent, S : GenericVirtueSessionComponent> virtueApplication(
   appComponentFactory: (VirtueAppComponent) -> A,
   initialSessionComponentFactory: (A, VirtuePlatformSessionComponent) -> S,
   config: DesktopVirtueConfig,
+  configureInitialSessionParams: (VirtueSessionParams) -> VirtueSessionParams = { it },
   onAllSessionsClosed: ApplicationScope.() -> Unit = { exitApplication() },
   darkColorScheme: ColorScheme = darkColorScheme(),
   lightColorScheme: ColorScheme = lightColorScheme(),
@@ -50,8 +57,10 @@ public fun <A : AppComponent, S : GenericVirtueSessionComponent> virtueApplicati
     virtuePlatformSessionComponent,
   ) as BaseVirtueSessionComponent
 
-  val initialSessionParams = VirtueSessionParams(
-    title = config.appName,
+  val initialSessionParams = configureInitialSessionParams(
+    VirtueSessionParams(
+      title = config.appName,
+    ),
   )
 
   val sessionManager = initialSessionComponent.sessionManager.apply {
@@ -91,6 +100,11 @@ public fun <A : AppComponent, S : GenericVirtueSessionComponent> virtueApplicati
           onPreviewKeyEvent = params.onPreviewKeyEvent,
           onKeyEvent = params.onKeyEvent,
         ) {
+          WindowMinSizeEffect(
+            params = params,
+            window = window,
+          )
+
           WithBackPressDispatching(
             onBackPressedDispatcher = sessionComponent.onBackPressedDispatcher,
           ) {
@@ -103,5 +117,26 @@ public fun <A : AppComponent, S : GenericVirtueSessionComponent> virtueApplicati
         }
       }
     }
+  }
+}
+
+@Composable
+private fun WindowMinSizeEffect(
+  window: ComposeWindow,
+  params: VirtueSessionParams,
+) {
+  val minimumWindowSize = when(val minSize = params.minWindowSize) {
+    null -> null
+    else -> with(LocalDensity.current) {
+      remember(density, minSize) { Dimension(minSize.width.roundToPx(), minSize.height.roundToPx()) }
+    }
+  }
+
+  DisposableEffect(window, minimumWindowSize) {
+    if(minimumWindowSize != null) {
+      window.minimumSize = minimumWindowSize
+    }
+
+    onDispose {}
   }
 }
