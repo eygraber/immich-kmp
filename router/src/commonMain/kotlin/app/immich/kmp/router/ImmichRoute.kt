@@ -7,10 +7,12 @@ sealed interface ImmichRoute : VirtueRoute {
   companion object {
     val RootUri = Uri.parse("immich://")
 
-    fun fromUri(uri: Uri): ImmichRoute? =
-      AdminRoute.fromUri(uri)
-        ?: MainRoute.fromUri(uri)
-        ?: RootRoute.fromUri(uri)
+    fun fromUri(
+      @Suppress("UNUSED_PARAMETER") uri: Uri,
+      decustomizedUri: Uri,
+    ): ImmichRoute? = AdminRoute.fromUri(decustomizedUri)
+      ?: MainRoute.fromUri(decustomizedUri)
+      ?: RootRoute.fromUri(decustomizedUri)
   }
 }
 
