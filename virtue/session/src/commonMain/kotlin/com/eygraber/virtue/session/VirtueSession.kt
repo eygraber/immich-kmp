@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.eygraber.uri.Uri
 import com.eygraber.virtue.back.press.dispatch.BackHandler
 import com.eygraber.virtue.back.press.dispatch.PlatformNavigationHandler
 import com.eygraber.virtue.di.scopes.SessionSingleton
@@ -26,7 +27,7 @@ import me.tatarka.inject.annotations.Inject
 @Inject
 public class VirtueSession(
   private val history: History,
-  private val router: VirtueSessionRouter,
+  private val router: VirtueRouter,
   private val themeSettings: ThemeSettings,
 ) {
   private var isBackHandlerEnabled by mutableStateOf(history.canGoBack)
@@ -36,21 +37,17 @@ public class VirtueSession(
   public fun SessionUi(
     darkColorScheme: ColorScheme,
     lightColorScheme: ColorScheme,
+    defaultUri: Uri,
   ) {
-    LaunchedEffect(history) {
-      launch {
-        history.updates.collect { currentItem ->
-          isBackHandlerEnabled = history.canGoBack
-          router.onHistoryUpdated(currentItem)
-        }
-      }
-    }
+    HistoryChangesEffect()
 
     BackHandler(enabled = isBackHandlerEnabled) {
       history.onBackPressed()
     }
 
-    HistoryLifecycleEffect()
+    HistoryLifecycleEffect(
+      defaultUri = defaultUri,
+    )
 
     MaterialTheme(
       colorScheme = when {
@@ -71,9 +68,21 @@ public class VirtueSession(
   }
 
   @Composable
-  private fun HistoryLifecycleEffect() {
-    DisposableEffect(history) {
-      history.initialize()
+  private fun HistoryChangesEffect() {
+    LaunchedEffect(history) {
+      launch {
+        history.changes.collect { currentItem ->
+          isBackHandlerEnabled = history.canGoBack
+          router.route(currentItem.payload.uri)
+        }
+      }
+    }
+  }
+
+  @Composable
+  private fun HistoryLifecycleEffect(defaultUri: Uri) {
+    DisposableEffect(history, defaultUri) {
+      history.initialize(defaultUri)
 
       onDispose {
         history.destroy()

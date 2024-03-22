@@ -33,6 +33,10 @@ internal fun File.insert(
     val currentLineAtInsertionPoint = matchingLines[insertionPoint]
     fileText.indexOf(currentLineAtInsertionPoint)
   }
+  else if(matchingLines.isEmpty()) {
+    val fallback = "dependencies {"
+    fileText.indexOf(fallback) + fallback.length
+  }
   else {
     val currentLineAtInsertionPoint = matchingLines.last()
     fileText.indexOf(currentLineAtInsertionPoint) + currentLineAtInsertionPoint.length

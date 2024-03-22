@@ -1,3 +1,3 @@
 package com.eygraber.virtue.platform
 
-public actual val currentPlatform: Platform = Platform.Ios
+public actual val CurrentPlatform: Platform = Platform.Ios

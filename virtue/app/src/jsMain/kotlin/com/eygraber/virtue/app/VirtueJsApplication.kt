@@ -5,6 +5,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.CanvasBasedWindow
+import com.eygraber.uri.Url
 import com.eygraber.virtue.back.press.dispatch.WithBackPressDispatching
 import com.eygraber.virtue.config.JsVirtueConfig
 import com.eygraber.virtue.di.components.AppComponent
@@ -63,6 +64,7 @@ public fun <A : AppComponent, S : GenericVirtueSessionComponent> virtueApplicati
         sessionComponent.session.SessionUi(
           darkColorScheme = darkColorScheme,
           lightColorScheme = lightColorScheme,
+          defaultUri = Url.parse(webPlatformComponent.browserLocation.href),
         )
       }
     }

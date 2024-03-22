@@ -9,6 +9,7 @@ import androidx.compose.runtime.key
 import androidx.compose.ui.window.ApplicationScope
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import com.eygraber.uri.Uri
 import com.eygraber.virtue.back.press.dispatch.WithBackPressDispatching
 import com.eygraber.virtue.config.DesktopVirtueConfig
 import com.eygraber.virtue.di.components.AppComponent
@@ -28,6 +29,7 @@ public fun <A : AppComponent, S : GenericVirtueSessionComponent> virtueApplicati
   onAllSessionsClosed: ApplicationScope.() -> Unit = { exitApplication() },
   darkColorScheme: ColorScheme = darkColorScheme(),
   lightColorScheme: ColorScheme = lightColorScheme(),
+  defaultUri: Uri,
   defaultThemeSetting: ThemeSetting = ThemeSetting.System,
 ) {
   val virtuePlatformComponent: VirtuePlatformComponent =
@@ -95,6 +97,7 @@ public fun <A : AppComponent, S : GenericVirtueSessionComponent> virtueApplicati
             sessionComponent.session.SessionUi(
               darkColorScheme = darkColorScheme,
               lightColorScheme = lightColorScheme,
+              defaultUri = defaultUri,
             )
           }
         }

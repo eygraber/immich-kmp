@@ -22,21 +22,19 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  check:
+  assemble:
     permissions:
       contents: read
-
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v4.2.1
         with:
           distribution: 'zulu'
           java-version-file: .ci-java-version
 
-      - uses: gradle/wrapper-validation-action@v2.0.0
+      - uses: gradle/wrapper-validation-action@v2.1.1
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
@@ -44,15 +42,13 @@ jobs:
           gradle-version: wrapper
           gradle-home-cache-cleanup: true
 
-      - name: Run check
-        run: ./gradlew check
+      - name: Run assemble task
+        run: ./gradlew assemble --no-configuration-cache -x jsBrowserDistribution -x wasmJsBrowserDistribution -x assembleRelease
 
   dependency_analysis:
     permissions:
       contents: read
-
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4.1.1
 
@@ -75,18 +71,16 @@ jobs:
   detekt:
     permissions:
       contents: read
-
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v4.2.1
         with:
           distribution: 'zulu'
           java-version-file: .ci-java-version
 
-      - uses: gradle/wrapper-validation-action@v2.0.0
+      - uses: gradle/wrapper-validation-action@v2.1.1
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
@@ -94,17 +88,88 @@ jobs:
           gradle-version: wrapper
           gradle-home-cache-cleanup: true
 
-      - name: Run detekt with type resolution
-        run: ./detekt
+      - name: Run detekt
+        run: ./gradlew detektAll
+
+  detekt-apple:
+    if: false
+    permissions:
+      contents: read
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+
+      - uses: actions/setup-java@v4.2.1
+        with:
+          distribution: 'zulu'
+          java-version-file: .ci-java-version
+
+      - uses: gradle/wrapper-validation-action@v2.1.1
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: wrapper
+          gradle-home-cache-cleanup: true
+
+      - name: Run detekt for apple targets
+        run: ./gradlew detektAppleMain detektAppleTest
 
   ktlint:
     permissions:
       contents: read
-
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4.1.1
 
       - name: Run ktlint
         run: ./format --no-format
+
+  lint:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+
+      - uses: actions/setup-java@v4.2.1
+        with:
+          distribution: 'zulu'
+          java-version-file: .ci-java-version
+
+      - uses: gradle/wrapper-validation-action@v2.1.1
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: wrapper
+          gradle-home-cache-cleanup: true
+
+      - name: Run Android lint
+        run: ./gradlew :apps:android:lintRelease
+
+  test:
+    permissions:
+      contents: read
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+
+      - uses: actions/setup-java@v4.2.1
+        with:
+          distribution: 'zulu'
+          java-version-file: .ci-java-version
+
+      - uses: gradle/wrapper-validation-action@v2.1.1
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: wrapper
+          gradle-home-cache-cleanup: true
+
+      - name: Run tests
+        run: ./gradlew allTests
+
+env:
+  GRADLE_OPTS: -Dorg.gradle.daemon=false -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx16g -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8 -XX:MaxMetaspaceSize=1024m"

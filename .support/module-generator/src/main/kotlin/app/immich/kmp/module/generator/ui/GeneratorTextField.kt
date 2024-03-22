@@ -35,7 +35,7 @@ fun GeneratorTextField(
 
   OutlinedTextField(
     value = TextFieldValue(
-      value,
+      if(!enabled && prefix != null && value == "") " " else value,
       selection,
     ),
     onValueChange = { textValue ->

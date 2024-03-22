@@ -1,5 +1,6 @@
 package com.eygraber.virtue.history
 
+import com.eygraber.uri.Uri
 import com.eygraber.virtue.back.press.dispatch.OnBackPressedDispatcher
 import com.eygraber.virtue.di.scopes.SessionSingleton
 import kotlinx.coroutines.flow.Flow
@@ -19,16 +20,15 @@ public fun historyState(index: Int, stateKey: String?): JsAny = js("({ index: in
 @Inject
 public class WasmHistory(
   private val browserHistory: org.w3c.dom.History,
-  private val browserLocation: org.w3c.dom.Location,
   private val browserWindow: org.w3c.dom.Window,
   private val history: TimelineHistory,
   private val backPressDispatcher: OnBackPressedDispatcher,
 ) : History {
-  override val currentItem: History.Item get() = history.currentItem
+  override val currentItem: History.Item? get() = history.currentItem
   override val canGoBack: Boolean get() = history.canGoBack
   override val canGoForward: Boolean get() = history.canGoForward
 
-  override val updates: Flow<History.Item> = history.updates
+  override val changes: Flow<History.Item> = history.changes
 
   private val popStateListener: (Event) -> Unit = { event ->
     val state = (event as PopStateEvent).state?.unsafeCast<HistoryState>()
@@ -50,15 +50,10 @@ public class WasmHistory(
     }
   }
 
-  override fun initialize() {
+  override fun initialize(initialUri: Uri) {
     browserWindow.addEventListener("popstate", popStateListener)
 
-    history.initialize()
-
-    if(!history.isRestored) {
-      // TODO: need to remove custom domain prefix if part of the path is included in it
-      update(history.currentItem.payload.copy(urlPath = browserLocation.pathname))
-    }
+    history.initialize(initialUri)
   }
 
   override fun destroy() {
@@ -68,12 +63,12 @@ public class WasmHistory(
 
   override fun push(payload: History.Item.Payload): History.Item =
     history.push(payload).apply {
-      browserHistory.pushState(historyState(index, payload.stateKey), "", payload.urlPath)
+      browserHistory.pushState(historyState(index, payload.stateKey), "", payload.uri.toString())
     }
 
   override fun update(payload: History.Item.Payload): History.Item =
     history.update(payload).apply {
-      browserHistory.replaceState(historyState(index, payload.stateKey), "", payload.urlPath)
+      browserHistory.replaceState(historyState(index, payload.stateKey), "", payload.uri.toString())
     }
 
   override fun move(delta: Int) {
@@ -97,14 +92,18 @@ public class WasmHistory(
   }
 
   private fun handlePopStateEvent(eventState: HistoryState) {
-    val current = currentItem.index
+    val current = currentItem?.index
 
-    val delta = eventState.index - current
+    if(current != null) {
+      val delta = eventState.index - current
 
-    // don't use browserHistory, because this event came from the browser (would cause an infinite loop)
-    history.move(delta)
+      // don't use browserHistory, because this event came from the browser (would cause an infinite loop)
+      history.move(delta)
+    }
   }
 
-  private fun isBackPress(eventState: HistoryState) =
-    eventState.index == history.currentItem.index - 1
+  private fun isBackPress(eventState: HistoryState): Boolean {
+    val currentItem = history.currentItem ?: return false
+    return eventState.index == currentItem.index - 1
+  }
 }
