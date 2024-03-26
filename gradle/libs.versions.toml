@@ -32,6 +32,7 @@ ktlint = "1.2.1"
 vice = "0.0.4"
 
 [plugins]
+completeKotlin = { id = "com.louiscad.complete-kotlin", version = "1.1.0" }
 conventions = { id = "com.eygraber.conventions", version.ref = "conventions" }
 dependencyAnalysis = { id = "com.autonomousapps.dependency-analysis", version = "1.30.0" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
