@@ -17,12 +17,14 @@ kotlin {
 
   kspDependenciesForAllTargets {
     ksp(libs.kotlinInject.compiler)
+    ksp(projects.ksp.generateActualCompiler)
   }
 
   sourceSets {
     commonMain {
       dependencies {
         implementation(projects.core)
+        implementation(projects.ksp.generateActualRuntime)
         implementation(projects.router)
         implementation(projects.theme)
         implementation(projects.uiPreview)
