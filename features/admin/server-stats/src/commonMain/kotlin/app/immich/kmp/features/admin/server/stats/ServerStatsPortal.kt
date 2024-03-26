@@ -3,6 +3,7 @@ package app.immich.kmp.features.admin.server.stats
 import app.immich.kmp.core.ImmichSessionComponent
 import app.immich.kmp.core.ImmichSessionPortal
 import app.immich.kmp.core.ImmichSessionPortalComponent
+import app.immich.kmp.ksp.generate.actual.GenerateActual
 import app.immich.kmp.router.AdminRoute
 import com.eygraber.virtue.di.scopes.SessionPortalSingleton
 import com.eygraber.virtue.session.GenericVirtuePortal
@@ -27,7 +28,7 @@ internal class ServerStatsPortal(
   override val parentComponent: ImmichSessionComponent,
 ) : ImmichSessionPortal<Route, View, Intent, Compositor, Effects, ViewState>() {
   // https://github.com/evant/kotlin-inject/pull/362
-  override val component = ServerStatsComponent.createA(
+  override val component = ServerStatsComponent.createKmp(
     sessionComponent = parentComponent,
     route = route,
   )
@@ -42,7 +43,8 @@ internal abstract class ServerStatsComponent(
   companion object
 }
 
-internal expect fun ServerStatsComponent.Companion.createA(
+@GenerateActual
+internal expect fun ServerStatsComponent.Companion.createKmp(
   sessionComponent: ImmichSessionComponent,
   route: Route,
 ): ServerStatsComponent
