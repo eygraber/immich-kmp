@@ -23,10 +23,12 @@ kotlin {
     commonMain {
       dependencies {
         implementation(projects.core)
+        implementation(projects.icons)
         implementation(projects.router)
         implementation(projects.theme)
         implementation(projects.uiPreview)
 
+        implementation(libs.compose.material3.windowSizeClass)
         implementation(libs.vice.sources)
       }
     }
