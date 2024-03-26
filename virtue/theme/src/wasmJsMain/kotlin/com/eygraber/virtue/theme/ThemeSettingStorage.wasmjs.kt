@@ -14,13 +14,11 @@ public actual class ThemeSettingStorage(
   private val localStorage = windowLocalStorage.localStorage
 
   public actual suspend fun load(): ThemeSetting? =
-    localStorage[KEY]?.let { setting ->
+    localStorage[ThemeSettings.KEY]?.let { setting ->
       ThemeSetting.entries.find { it.name == setting }
     }
 
   public actual suspend fun store(setting: ThemeSetting) {
-    localStorage[KEY] = setting.name
+    localStorage[ThemeSettings.KEY] = setting.name
   }
 }
-
-private const val KEY = "com.eygraber.virtue.theme.ThemeSetting"

@@ -30,4 +30,8 @@ public class ThemeSettings(
     mutableSetting.value = setting
     storage.store(setting)
   }
+
+  internal companion object {
+    const val KEY = "com.eygraber.virtue.theme.ThemeSettings"
+  }
 }

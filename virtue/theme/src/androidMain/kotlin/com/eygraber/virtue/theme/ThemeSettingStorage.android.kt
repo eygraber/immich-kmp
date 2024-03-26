@@ -15,7 +15,7 @@ public actual class ThemeSettingStorage(
 ) {
   public actual suspend fun load(): ThemeSetting? =
     withContext(dispatcher) {
-      sharedPreferencesProvider(SHARED_PREFS_NAME)
+      sharedPreferencesProvider(ThemeSettings.KEY)
         .getString(KEY, null)
         ?.let { setting ->
           ThemeSetting.entries.find { it.name == setting }
@@ -24,7 +24,7 @@ public actual class ThemeSettingStorage(
 
   public actual suspend fun store(setting: ThemeSetting) {
     withContext(dispatcher) {
-      sharedPreferencesProvider(SHARED_PREFS_NAME)
+      sharedPreferencesProvider(ThemeSettings.KEY)
         .edit()
         .putString(KEY, setting.name)
         .apply()
@@ -32,5 +32,4 @@ public actual class ThemeSettingStorage(
   }
 }
 
-private const val SHARED_PREFS_NAME = "com.eygraber.virtue.theme.ThemeSettings"
 private const val KEY = "setting"

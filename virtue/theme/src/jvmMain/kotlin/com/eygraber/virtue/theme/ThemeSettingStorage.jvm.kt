@@ -33,4 +33,4 @@ public actual class ThemeSettingStorage(
   }
 }
 
-private const val FILENAME = "com.eygraber.virtue.theme.ThemeSetting.conf"
+private const val FILENAME = "${ThemeSettings.KEY}.conf"
