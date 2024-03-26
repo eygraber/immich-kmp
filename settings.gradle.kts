@@ -59,6 +59,7 @@ plugins {
 
 include(":apps:android")
 include(":apps:desktop")
+include(":apps:ios-framework")
 include(":apps:shared")
 include(":apps:webJs")
 include(":apps:webWasm")

@@ -21,7 +21,7 @@ import com.eygraber.virtue.theme.ThemeSetting
 @OptIn(ExperimentalComposeUiApi::class)
 public fun <A : AppComponent, S : GenericVirtueSessionComponent> virtueApplication(
   appComponentFactory: (VirtueAppComponent) -> A,
-  initialSessionComponentFactory: (A, VirtuePlatformSessionComponent) -> S,
+  sessionComponentFactory: (A, VirtuePlatformSessionComponent) -> S,
   config: WasmVirtueConfig,
   title: String = config.appName,
   darkColorScheme: ColorScheme = darkColorScheme(),
@@ -45,7 +45,7 @@ public fun <A : AppComponent, S : GenericVirtueSessionComponent> virtueApplicati
 
   val appComponent = appComponentFactory(virtueAppComponent)
 
-  val sessionComponent = initialSessionComponentFactory(
+  val sessionComponent = sessionComponentFactory(
     appComponent,
     virtuePlatformSessionComponent,
   ) as BaseVirtueSessionComponent

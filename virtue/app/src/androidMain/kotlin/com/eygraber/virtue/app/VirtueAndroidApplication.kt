@@ -31,13 +31,7 @@ public abstract class VirtueAndroidApplication<A : AppComponent> : Application()
 
   final override val virtueAppComponent: VirtueAppComponent by lazy(LazyThreadSafetyMode.NONE) {
     VirtueAppComponent.create(
-      platformComponent = VirtuePlatformComponent.create(
-        AndroidSystemServiceComponent.create(
-          AndroidComponent.create(
-            applicationContext,
-          ),
-        ),
-      ),
+      platformComponent = virtuePlatformComponent,
       config = config,
     )
   }

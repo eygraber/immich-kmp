@@ -13,7 +13,7 @@ fun main() = virtueApplication(
       virtueAppComponent = virtueAppComponent,
     )
   },
-  initialSessionComponentFactory = { appComponent, virtuePlatformSessionComponent ->
+  sessionComponentFactory = { appComponent, virtuePlatformSessionComponent ->
     ImmichSessionComponent.create(
       appComponent = appComponent,
       virtuePlatformSessionComponent = virtuePlatformSessionComponent,

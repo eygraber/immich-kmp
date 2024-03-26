@@ -32,11 +32,11 @@ public fun <A : AppComponent, S : GenericVirtueSessionComponent> virtueApplicati
   appComponentFactory: (VirtueAppComponent) -> A,
   initialSessionComponentFactory: (A, VirtuePlatformSessionComponent) -> S,
   config: DesktopVirtueConfig,
+  defaultUri: Uri,
   configureInitialSessionParams: (VirtueSessionParams) -> VirtueSessionParams = { it },
   onAllSessionsClosed: ApplicationScope.() -> Unit = { exitApplication() },
   darkColorScheme: ColorScheme = darkColorScheme(),
   lightColorScheme: ColorScheme = lightColorScheme(),
-  defaultUri: Uri,
   defaultThemeSetting: ThemeSetting = ThemeSetting.System,
 ) {
   val virtuePlatformComponent: VirtuePlatformComponent =
