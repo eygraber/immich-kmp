@@ -51,7 +51,7 @@ class GenerateProcessor(
       val funcReturn = func.returnType
       if(funcReturn == null ||
         funcReturn.toString() == "Unit" ||
-        funcReturn.annotations.any { it.shortName.asString() == "Component" }
+        funcReturn.resolve().declaration.annotations.none { it.shortName.asString() == "Component" }
       ) {
         logger.error("$funcName's return type should be a type annotated with @Component")
         continue

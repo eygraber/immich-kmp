@@ -89,8 +89,30 @@ jobs:
       - name: Run detekt
         run: ./gradlew detektAll
 
+  build-ios-app:
+    permissions:
+      contents: read
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+
+      - uses: actions/setup-java@v4.2.1
+        with:
+          distribution: 'zulu'
+          java-version-file: .ci-java-version
+
+      - uses: gradle/wrapper-validation-action@v2.1.2
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: wrapper
+          gradle-home-cache-cleanup: true
+
+      - name: Build the ios app
+        run: xcodebuild -project apps/ios/iosApp.xcodeproj -scheme iosApp -sdk iphonesimulator -configuration Debug build
+
   detekt-apple:
-    if: false
     permissions:
       contents: read
     runs-on: macos-14
