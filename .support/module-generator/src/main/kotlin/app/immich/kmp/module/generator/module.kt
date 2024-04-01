@@ -16,18 +16,8 @@ internal fun createModule(
   val featureDir = File(projectDir, "features")
   val moduleDir = File(featureDir, moduleName.replace(":", "/")).apply { mkdir() }
   val commonMainDir = File(moduleDir, "src" / "commonMain").apply { mkdirs() }
-  val androidDir = File(moduleDir, "src" / "androidMain").apply { mkdirs() }
-  val iosDir = File(moduleDir, "src" / "iosMain").apply { mkdirs() }
-  val jsDir = File(moduleDir, "src" / "jsMain").apply { mkdirs() }
-  val jvmDir = File(moduleDir, "src" / "jvmMain").apply { mkdirs() }
-  val wasmJsDir = File(moduleDir, "src" / "wasmJsMain").apply { mkdirs() }
   val packagePath = packageName.replace(".", File.separator)
   val commonMainPackageDir = File(commonMainDir, "kotlin" / packagePath).apply { mkdirs() }
-  val androidPackageDir = File(androidDir, "kotlin" / packagePath).apply { mkdirs() }
-  val iosPackageDir = File(iosDir, "kotlin" / packagePath).apply { mkdirs() }
-  val jsPackageDir = File(jsDir, "kotlin" / packagePath).apply { mkdirs() }
-  val jvmPackageDir = File(jvmDir, "kotlin" / packagePath).apply { mkdirs() }
-  val wasmJsPackageDir = File(wasmJsDir, "kotlin" / packagePath).apply { mkdirs() }
 
   File(moduleDir, "build.gradle.kts").apply {
     if(!exists()) {
@@ -109,11 +99,11 @@ internal fun createModule(
         |import app.immich.kmp.core.ImmichSessionComponent
         |import app.immich.kmp.core.ImmichSessionPortal
         |import app.immich.kmp.core.ImmichSessionPortalComponent
-        |import app.immich.kmp.ksp.generate.actual.GenerateActual
         |import app.immich.kmp.router.${portalType.name}Route
         |import com.eygraber.virtue.di.scopes.SessionPortalSingleton
         |import com.eygraber.virtue.session.GenericVirtuePortal
         |import me.tatarka.inject.annotations.Component
+        |import me.tatarka.inject.annotations.TargetComponentAccessor
         |
         |internal typealias Route = $routeType
         |internal typealias View = $viewName
@@ -149,7 +139,7 @@ internal fun createModule(
         |  companion object
         |}
         |
-        |@GenerateActual
+        |@TargetComponentAccessor
         |internal expect fun $componentName.Companion.createKmp(
         |  sessionComponent: ImmichSessionComponent,
         |  route: Route,
@@ -364,36 +354,6 @@ internal fun createModule(
           |}
           |
           |internal typealias ViewStatePreviewProvider = $viewStatePreviewProviderName
-          |
-          """.trimMargin(),
-        )
-      }
-    }
-  }
-
-  listOf(androidPackageDir, iosPackageDir, jsPackageDir, jvmPackageDir, wasmJsPackageDir).forEach { target ->
-    val targetName = when(target) {
-      androidPackageDir -> "android"
-      iosPackageDir -> "ios"
-      jsPackageDir -> "js"
-      jvmPackageDir -> "jvm"
-      wasmJsPackageDir -> "wasmjs"
-      else -> error("unknown target source set $target")
-    }
-
-    File(target, "$portalName.$targetName.kt").apply {
-      if(!exists()) {
-        createNewFile()
-        writeText(
-          """
-          |package $packageName
-          |
-          |import app.immich.kmp.core.ImmichSessionComponent
-          |
-          |internal actual fun $componentName.Companion.createA(
-          |  sessionComponent: ImmichSessionComponent,
-          |  route: Route,
-          |): $componentName = $componentName.Companion.create(sessionComponent, route)
           |
           """.trimMargin(),
         )

@@ -3,11 +3,11 @@ package app.immich.kmp.features.main.albums
 import app.immich.kmp.core.ImmichSessionComponent
 import app.immich.kmp.core.ImmichSessionPortal
 import app.immich.kmp.core.ImmichSessionPortalComponent
-import app.immich.kmp.ksp.generate.actual.GenerateActual
 import app.immich.kmp.router.MainRoute
 import com.eygraber.virtue.di.scopes.SessionPortalSingleton
 import com.eygraber.virtue.session.GenericVirtuePortal
 import me.tatarka.inject.annotations.Component
+import me.tatarka.inject.annotations.TargetComponentAccessor
 
 internal typealias Route = MainRoute.Albums
 internal typealias View = AlbumsView
@@ -43,7 +43,7 @@ internal abstract class AlbumsComponent(
   companion object
 }
 
-@GenerateActual
+@TargetComponentAccessor
 internal expect fun AlbumsComponent.Companion.createKmp(
   sessionComponent: ImmichSessionComponent,
   route: Route,

@@ -1,9 +1,9 @@
 package app.immich.kmp.core
 
-import app.immich.kmp.ksp.generate.actual.GenerateActual
 import com.eygraber.virtue.di.components.VirtueAppComponent
+import me.tatarka.inject.annotations.TargetComponentAccessor
 
-@GenerateActual
+@TargetComponentAccessor
 expect fun ImmichAppComponent.Companion.createKmp(
   virtueAppComponent: VirtueAppComponent,
 ): ImmichAppComponent
