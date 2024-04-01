@@ -17,6 +17,7 @@ kotlin {
 
   kspDependenciesForAllTargets {
     ksp(libs.kotlinInject.compiler)
+    ksp(projects.ksp.generateActualCompiler)
   }
 
   sourceSets {
@@ -25,6 +26,12 @@ kotlin {
         api(projects.router)
         api(projects.virtue.diComponents)
         api(projects.virtue.session)
+      }
+    }
+
+    iosMain {
+      dependencies {
+        implementation(projects.ksp.generateActualRuntime)
       }
     }
   }

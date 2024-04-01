@@ -22,7 +22,7 @@ import org.jetbrains.skiko.wasm.onWasmReady
 @OptIn(ExperimentalComposeUiApi::class)
 public fun <A : AppComponent, S : GenericVirtueSessionComponent> virtueApplication(
   appComponentFactory: (VirtueAppComponent) -> A,
-  initialSessionComponentFactory: (A, VirtuePlatformSessionComponent) -> S,
+  sessionComponentFactory: (A, VirtuePlatformSessionComponent) -> S,
   config: JsVirtueConfig,
   title: String = config.appName,
   darkColorScheme: ColorScheme = darkColorScheme(),
@@ -46,7 +46,7 @@ public fun <A : AppComponent, S : GenericVirtueSessionComponent> virtueApplicati
 
   val virtuePlatformSessionComponent = VirtuePlatformSessionComponent.create()
 
-  val sessionComponent = initialSessionComponentFactory(
+  val sessionComponent = sessionComponentFactory(
     appComponent,
     virtuePlatformSessionComponent,
   ) as BaseVirtueSessionComponent
