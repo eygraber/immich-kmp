@@ -3,11 +3,11 @@ package app.immich.kmp.features.main.favorites
 import app.immich.kmp.core.ImmichSessionComponent
 import app.immich.kmp.core.ImmichSessionPortal
 import app.immich.kmp.core.ImmichSessionPortalComponent
-import app.immich.kmp.ksp.generate.actual.GenerateActual
 import app.immich.kmp.router.MainRoute
 import com.eygraber.virtue.di.scopes.SessionPortalSingleton
 import com.eygraber.virtue.session.GenericVirtuePortal
 import me.tatarka.inject.annotations.Component
+import me.tatarka.inject.annotations.TargetComponentAccessor
 
 internal typealias Route = MainRoute.Favorites
 internal typealias View = FavoritesView
@@ -43,7 +43,7 @@ internal abstract class FavoritesComponent(
   companion object
 }
 
-@GenerateActual
+@TargetComponentAccessor
 internal expect fun FavoritesComponent.Companion.createKmp(
   sessionComponent: ImmichSessionComponent,
   route: Route,

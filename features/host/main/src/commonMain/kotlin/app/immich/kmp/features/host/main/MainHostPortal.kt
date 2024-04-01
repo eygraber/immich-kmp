@@ -3,11 +3,11 @@ package app.immich.kmp.features.host.main
 import app.immich.kmp.core.ImmichSessionComponent
 import app.immich.kmp.core.ImmichSessionPortal
 import app.immich.kmp.core.ImmichSessionPortalComponent
-import app.immich.kmp.ksp.generate.actual.GenerateActual
 import app.immich.kmp.router.HostRoute
 import com.eygraber.virtue.di.scopes.SessionPortalSingleton
 import com.eygraber.virtue.session.GenericVirtuePortal
 import me.tatarka.inject.annotations.Component
+import me.tatarka.inject.annotations.TargetComponentAccessor
 
 internal typealias Route = HostRoute.Main
 internal typealias View = MainHostView
@@ -43,7 +43,7 @@ internal abstract class MainHostComponent(
   companion object
 }
 
-@GenerateActual
+@TargetComponentAccessor
 internal expect fun MainHostComponent.Companion.createKmp(
   sessionComponent: ImmichSessionComponent,
   route: Route,

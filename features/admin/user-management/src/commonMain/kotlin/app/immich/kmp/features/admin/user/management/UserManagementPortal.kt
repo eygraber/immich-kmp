@@ -3,11 +3,11 @@ package app.immich.kmp.features.admin.user.management
 import app.immich.kmp.core.ImmichSessionComponent
 import app.immich.kmp.core.ImmichSessionPortal
 import app.immich.kmp.core.ImmichSessionPortalComponent
-import app.immich.kmp.ksp.generate.actual.GenerateActual
 import app.immich.kmp.router.AdminRoute
 import com.eygraber.virtue.di.scopes.SessionPortalSingleton
 import com.eygraber.virtue.session.GenericVirtuePortal
 import me.tatarka.inject.annotations.Component
+import me.tatarka.inject.annotations.TargetComponentAccessor
 
 internal typealias Route = AdminRoute.UserManagement
 internal typealias View = UserManagementView
@@ -43,7 +43,7 @@ internal abstract class UserManagementComponent(
   companion object
 }
 
-@GenerateActual
+@TargetComponentAccessor
 internal expect fun UserManagementComponent.Companion.createKmp(
   sessionComponent: ImmichSessionComponent,
   route: Route,

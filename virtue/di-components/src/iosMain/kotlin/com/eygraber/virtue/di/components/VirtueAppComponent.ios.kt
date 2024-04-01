@@ -1,9 +1,9 @@
 package com.eygraber.virtue.di.components
 
-import app.immich.kmp.ksp.generate.actual.GenerateActual
 import com.eygraber.virtue.config.VirtueConfig
+import me.tatarka.inject.annotations.TargetComponentAccessor
 
-@GenerateActual
+@TargetComponentAccessor
 public expect fun VirtueAppComponent.Companion.createKmp(
   platformComponent: VirtuePlatformComponent,
   config: VirtueConfig,

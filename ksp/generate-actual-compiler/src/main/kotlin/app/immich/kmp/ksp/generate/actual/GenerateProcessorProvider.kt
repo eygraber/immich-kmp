@@ -17,6 +17,7 @@ import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ksp.toKModifier
 import com.squareup.kotlinpoet.ksp.toTypeName
 import com.squareup.kotlinpoet.ksp.writeTo
+import me.tatarka.inject.annotations.TargetComponentAccessor
 
 class GenerateProcessor(
   private val codeGenerator: CodeGenerator,
@@ -24,7 +25,7 @@ class GenerateProcessor(
 ) : SymbolProcessor {
   override fun process(resolver: Resolver): List<KSAnnotated> {
     val symbols = resolver.getSymbolsWithAnnotation(
-      requireNotNull(GenerateActual::class.qualifiedName),
+      requireNotNull(TargetComponentAccessor::class.qualifiedName),
     )
 
     for(symbol in symbols) {
@@ -63,7 +64,7 @@ class GenerateProcessor(
       ).apply {
         addFunction(
           FunSpec.builder(funcName).apply {
-            addAnnotation(GenerateActual::class)
+            addAnnotation(TargetComponentAccessor::class)
 
             addModifiers(
               func.getVisibility().toKModifier() ?: KModifier.INTERNAL,
