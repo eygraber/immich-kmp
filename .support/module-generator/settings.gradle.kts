@@ -60,18 +60,18 @@ dependencyResolutionManagement {
 }
 
 plugins {
-  id("com.gradle.enterprise") version "3.16.1"
-  id("com.eygraber.conventions.settings") version "0.0.69"
+  id("com.gradle.develocity") version "3.17"
+  id("com.eygraber.conventions.settings") version "0.0.70"
 }
 
 rootProject.name = "module-generator"
 
-gradleEnterprise {
+develocity {
   buildScan {
-    termsOfServiceUrl = "https://gradle.com/terms-of-service"
+    termsOfUseUrl = "https://gradle.com/terms-of-service"
+    publishing.onlyIf { Env.isCI }
     if(Env.isCI) {
-      termsOfServiceAgree = "yes"
-      publishAlways()
+      termsOfUseAgree = "yes"
     }
   }
 }
