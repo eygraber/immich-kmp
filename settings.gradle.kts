@@ -1,3 +1,4 @@
+import com.eygraber.conventions.Env
 import com.eygraber.conventions.repositories.addCommonRepositories
 
 pluginManagement {
@@ -54,7 +55,7 @@ rootProject.name = "immich-kmp"
 
 plugins {
   id("com.eygraber.conventions.settings") version "0.0.70"
-  id("com.gradle.enterprise") version "3.16.1"
+  id("com.gradle.develocity") version "3.17"
 }
 
 include(":apps:android")
@@ -111,12 +112,12 @@ include(":virtue:theme-compose")
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
-gradleEnterprise {
+develocity {
   buildScan {
-    termsOfServiceUrl = "https://gradle.com/terms-of-service"
-    if (System.getenv("CI") != null) {
-      termsOfServiceAgree = "yes"
-      publishAlways()
+    termsOfUseUrl = "https://gradle.com/terms-of-service"
+    publishing.onlyIf { Env.isCI }
+    if(Env.isCI) {
+      termsOfUseAgree = "yes"
     }
   }
 }
