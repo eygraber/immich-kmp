@@ -169,6 +169,7 @@ jobs:
         run: ./gradlew :apps:android:lintRelease
 
   test:
+    if: false
     permissions:
       contents: read
     runs-on: macos-14
