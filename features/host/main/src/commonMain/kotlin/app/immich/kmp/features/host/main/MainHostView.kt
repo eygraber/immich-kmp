@@ -1,7 +1,6 @@
 package app.immich.kmp.features.host.main
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkHorizontally
@@ -10,6 +9,7 @@ import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -23,7 +23,6 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -83,7 +82,8 @@ private fun MainHost(state: ViewState, onIntent: (Intent) -> Unit) {
       }
 
       Box(
-        modifier = Modifier.fillMaxSize().padding(contentPadding).padding(start = paddingForNavRailIfNeeded),
+        modifier = Modifier.fillMaxSize().consumeWindowInsets(contentPadding).padding(contentPadding)
+          .padding(start = paddingForNavRailIfNeeded),
         contentAlignment = Alignment.Center,
       ) {
         Text("Hello you are in Main")
@@ -110,26 +110,11 @@ private fun MainNavigationBar(
   onNavigationItemSelected: (ImmichRoute) -> Unit,
   widthSizeClass: WindowWidthSizeClass,
 ) {
-  @Composable
-  fun Animation(
-    navigationBar: @Composable () -> Unit,
+  AnimatedVisibility(
+    visible = widthSizeClass < WindowWidthSizeClass.Medium,
+    enter = expandVertically(),
+    exit = shrinkVertically()
   ) {
-    val isNavigationBarShowing = widthSizeClass < WindowWidthSizeClass.Medium
-
-    AnimatedVisibility(
-      visibleState = remember {
-        MutableTransitionState(initialState = isNavigationBarShowing)
-      }.apply {
-        targetState = isNavigationBarShowing
-      },
-      enter = expandVertically(),
-      exit = shrinkVertically(),
-    ) {
-      navigationBar()
-    }
-  }
-
-  Animation {
     NavigationBar {
       // ShowcasePortalKey.residentPortals.forEach { item ->
       //   NavigationBarItem(
@@ -155,26 +140,11 @@ private fun MainNavigationBar(
 private fun MainNavigationRail(
   widthSizeClass: WindowWidthSizeClass,
 ) {
-  @Composable
-  fun Animation(
-    navigationRail: @Composable () -> Unit,
+  AnimatedVisibility(
+    visible = widthSizeClass >= WindowWidthSizeClass.Medium,
+    enter = expandHorizontally(),
+    exit = shrinkHorizontally()
   ) {
-    val isNavigationRailShowing = widthSizeClass >= WindowWidthSizeClass.Medium
-
-    AnimatedVisibility(
-      visibleState = remember {
-        MutableTransitionState(initialState = isNavigationRailShowing)
-      }.apply {
-        targetState = isNavigationRailShowing
-      },
-      enter = expandHorizontally(),
-      exit = shrinkHorizontally(),
-    ) {
-      navigationRail()
-    }
-  }
-
-  Animation {
     NavigationRail { }
   }
 }

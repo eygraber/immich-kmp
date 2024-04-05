@@ -2,10 +2,8 @@ package com.eygraber.virtue.session
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -55,11 +53,11 @@ public class VirtueSession(
         else -> lightColorScheme
       },
     ) {
-      Scaffold { contentPadding ->
+      Box {
         PlatformNavigation()
 
         Box(
-          modifier = Modifier.fillMaxSize().padding(contentPadding),
+          modifier = Modifier.fillMaxSize(),
         ) {
           router.Render()
         }
