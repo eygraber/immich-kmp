@@ -37,6 +37,7 @@ jobs:
         with:
           gradle-version: wrapper
           gradle-home-cache-cleanup: true
+          validate-wrappers: true
 
       - name: Run assemble task
         run: ./gradlew assemble --no-configuration-cache -x jsBrowserDistribution -x wasmJsBrowserDistribution -x assembleRelease
@@ -58,6 +59,7 @@ jobs:
         with:
           gradle-version: wrapper
           gradle-home-cache-cleanup: true
+          validate-wrappers: true
 
       - name: Run dependency analysis check
         run: ./gradlew buildHealth
@@ -79,6 +81,7 @@ jobs:
         with:
           gradle-version: wrapper
           gradle-home-cache-cleanup: true
+          validate-wrappers: true
 
       - name: Run detekt
         run: ./gradlew detektAll
@@ -100,6 +103,7 @@ jobs:
         with:
           gradle-version: wrapper
           gradle-home-cache-cleanup: true
+          validate-wrappers: true
 
       - name: Build the ios app
         run: xcodebuild -project apps/ios/iosApp.xcodeproj -scheme iosApp -sdk iphonesimulator -configuration Debug build
@@ -121,6 +125,7 @@ jobs:
         with:
           gradle-version: wrapper
           gradle-home-cache-cleanup: true
+          validate-wrappers: true
 
       - name: Run detekt for apple targets
         run: ./gradlew detektAppleMain detektAppleTest
@@ -152,6 +157,7 @@ jobs:
         with:
           gradle-version: wrapper
           gradle-home-cache-cleanup: true
+          validate-wrappers: true
 
       - name: Run Android lint
         run: ./gradlew :apps:android:lintRelease
@@ -174,6 +180,7 @@ jobs:
         with:
           gradle-version: wrapper
           gradle-home-cache-cleanup: true
+          validate-wrappers: true
 
       - name: Run tests
         run: ./gradlew allTests
