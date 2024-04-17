@@ -55,7 +55,7 @@ rootProject.name = "immich-kmp"
 
 plugins {
   id("com.eygraber.conventions.settings") version "0.0.71"
-  id("com.gradle.develocity") version "3.17.1"
+  id("com.gradle.develocity") version "3.17.2"
 }
 
 include(":apps:android")
