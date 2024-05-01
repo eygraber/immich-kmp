@@ -1,5 +1,5 @@
 [versions]
-android-plugin = "8.3.2"
+android-plugin = "8.4.0"
 
 android-sdk-compile = "34"
 android-sdk-target = "34"
@@ -9,7 +9,7 @@ androidx-activity = "1.9.0"
 
 atomicfu = "0.24.0"
 
-composeJetbrains = "1.6.10-beta02"
+composeJetbrains = "1.6.10-beta03"
 
 conventions = "0.0.71"
 
