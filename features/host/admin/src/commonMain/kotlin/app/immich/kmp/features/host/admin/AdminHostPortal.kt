@@ -7,7 +7,7 @@ import app.immich.kmp.router.HostRoute
 import com.eygraber.virtue.di.scopes.SessionPortalSingleton
 import com.eygraber.virtue.session.GenericVirtuePortal
 import me.tatarka.inject.annotations.Component
-import me.tatarka.inject.annotations.TargetComponentAccessor
+import me.tatarka.inject.annotations.KmpComponentCreate
 
 internal typealias Route = HostRoute.Admin
 internal typealias View = AdminHostView
@@ -43,7 +43,7 @@ internal abstract class AdminHostComponent(
   companion object
 }
 
-@TargetComponentAccessor
+@KmpComponentCreate
 internal expect fun AdminHostComponent.Companion.createKmp(
   sessionComponent: ImmichSessionComponent,
   route: Route,

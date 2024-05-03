@@ -18,7 +18,6 @@ kotlin {
 
   kspDependenciesForAllTargets {
     ksp(libs.kotlinInject.compiler)
-    ksp(projects.ksp.generateActualCompiler)
   }
 
   sourceSets {
@@ -30,7 +29,6 @@ kotlin {
 
     commonMain {
       dependencies {
-        implementation(projects.ksp.generateActualRuntime)
         api(projects.virtue.config)
         api(projects.virtue.diScopes)
         api(projects.virtue.theme)

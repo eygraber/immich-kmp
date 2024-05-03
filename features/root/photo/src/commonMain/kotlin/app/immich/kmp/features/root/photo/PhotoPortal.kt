@@ -7,7 +7,7 @@ import app.immich.kmp.router.RootRoute
 import com.eygraber.virtue.di.scopes.SessionPortalSingleton
 import com.eygraber.virtue.session.GenericVirtuePortal
 import me.tatarka.inject.annotations.Component
-import me.tatarka.inject.annotations.TargetComponentAccessor
+import me.tatarka.inject.annotations.KmpComponentCreate
 
 internal typealias Route = RootRoute.Photo
 internal typealias View = PhotoView
@@ -43,7 +43,7 @@ internal abstract class PhotoComponent(
   companion object
 }
 
-@TargetComponentAccessor
+@KmpComponentCreate
 internal expect fun PhotoComponent.Companion.createKmp(
   sessionComponent: ImmichSessionComponent,
   route: Route,

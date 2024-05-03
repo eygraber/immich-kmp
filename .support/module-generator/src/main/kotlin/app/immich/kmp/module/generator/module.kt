@@ -44,14 +44,12 @@ internal fun createModule(
         |
         |  kspDependenciesForAllTargets {
         |    ksp(libs.kotlinInject.compiler)
-        |    ksp(projects.ksp.generateActualCompiler)
         |  }
         |
         |  sourceSets {
         |    commonMain {
         |      dependencies {
         |        implementation(projects.core)
-        |        implementation(projects.ksp.generateActualRuntime)
         |        implementation(projects.router)
         |        implementation(projects.theme)
         |        implementation(projects.uiPreview)
@@ -103,7 +101,7 @@ internal fun createModule(
         |import com.eygraber.virtue.di.scopes.SessionPortalSingleton
         |import com.eygraber.virtue.session.GenericVirtuePortal
         |import me.tatarka.inject.annotations.Component
-        |import me.tatarka.inject.annotations.TargetComponentAccessor
+        |import me.tatarka.inject.annotations.KmpComponentCreate
         |
         |internal typealias Route = $routeType
         |internal typealias View = $viewName
@@ -139,7 +137,7 @@ internal fun createModule(
         |  companion object
         |}
         |
-        |@TargetComponentAccessor
+        |@KmpComponentCreate
         |internal expect fun $componentName.Companion.createKmp(
         |  sessionComponent: ImmichSessionComponent,
         |  route: Route,
