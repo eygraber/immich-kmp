@@ -9,7 +9,7 @@ androidx-activity = "1.9.0"
 
 atomicfu = "0.24.0"
 
-composeJetbrains = "1.6.10-beta03"
+composeJetbrains = "1.6.10-rc01"
 
 conventions = "0.0.71"
 
@@ -20,8 +20,6 @@ detektEygraber = "1.0.11"
 kotlin = "1.9.23"
 
 kotlinInject = "0.7.0-SNAPSHOT"
-
-kotlinPoet = "1.16.0"
 
 kotlinx-coroutines = "1.8.0"
 
@@ -64,10 +62,6 @@ kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1
 
 kotlinInject-compiler = { module = "me.tatarka.inject:kotlin-inject-compiler-ksp", version.ref = "kotlinInject" }
 kotlinInject-runtime = { module = "me.tatarka.inject:kotlin-inject-runtime-kmp", version.ref = "kotlinInject" }
-
-kotlinPoet-ksp = { module = "com.squareup:kotlinpoet-ksp", version.ref = "kotlinPoet" }
-
-ksp = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp" }
 
 # not actually used; just here so renovate picks it up
 ktlint = { module = "com.pinterest.ktlint:ktlint-bom", version.ref = "ktlint" }
