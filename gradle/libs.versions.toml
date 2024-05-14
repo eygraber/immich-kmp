@@ -9,21 +9,21 @@ androidx-activity = "1.9.0"
 
 atomicfu = "0.24.0"
 
-composeJetbrains = "1.6.10-rc01"
+composeJetbrains = "1.6.10-rc02"
 
 conventions = "0.0.71"
 
 detekt = "1.23.6"
-detektCompose = "0.3.18"
+detektCompose = "0.3.20"
 detektEygraber = "1.0.11"
 
-kotlin = "1.9.23"
+kotlin = "1.9.24"
 
 kotlinInject = "0.7.0-SNAPSHOT"
 
-kotlinx-coroutines = "1.8.0"
+kotlinx-coroutines = "1.8.1"
 
-ksp = "1.9.23-1.0.20"
+ksp = "1.9.24-1.0.20"
 
 ktlint = "1.2.1"
 
@@ -32,7 +32,7 @@ vice = "0.0.4"
 [plugins]
 completeKotlin = { id = "com.louiscad.complete-kotlin", version = "1.1.0" }
 conventions = { id = "com.eygraber.conventions", version.ref = "conventions" }
-dependencyAnalysis = { id = "com.autonomousapps.dependency-analysis", version = "1.30.0" }
+dependencyAnalysis = { id = "com.autonomousapps.dependency-analysis", version = "1.31.0" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
@@ -50,7 +50,7 @@ buildscript-composeJetbrains = { module = "org.jetbrains.compose:compose-gradle-
 buildscript-detekt = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
 buildscript-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 
-compose-compilerJetbrains = "org.jetbrains.compose.compiler:compiler:1.5.10.2"
+compose-compilerJetbrains = "org.jetbrains.compose.compiler:compiler:1.5.13.3"
 compose-material3-windowSizeClass = "dev.chrisbanes.material3:material3-window-size-class-multiplatform:0.5.0"
 
 detektCompose = { module = "io.nlopez.compose.rules:detekt", version.ref = "detektCompose" }
