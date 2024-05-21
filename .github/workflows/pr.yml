@@ -87,7 +87,7 @@ jobs:
         run: ./gradlew detektAll
 
   build-ios-app:
-    # TODO: Re-enable build-ios-app when https://github.com/JetBrains/compose-multiplatform/issues/4809 is resolved
+    # Re-enable when https://github.com/JetBrains/compose-multiplatform/issues/4777 is resolved
     if: false
     permissions:
       contents: read
@@ -111,6 +111,8 @@ jobs:
         run: xcodebuild -project apps/ios/iosApp.xcodeproj -scheme iosApp -sdk iphonesimulator -configuration Debug build
 
   detekt-apple:
+    # Re-enable when https://github.com/JetBrains/compose-multiplatform/issues/4777 is resolved
+    if: false
     permissions:
       contents: read
     runs-on: macos-14

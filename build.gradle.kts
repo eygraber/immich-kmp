@@ -8,6 +8,7 @@ buildscript {
     classpath(libs.buildscript.android)
     classpath(libs.buildscript.androidCacheFix)
     classpath(libs.buildscript.atomicfu)
+    classpath(libs.buildscript.composeCompiler)
     classpath(libs.buildscript.composeJetbrains)
     classpath(libs.buildscript.detekt)
     classpath(libs.buildscript.kotlin)
@@ -28,12 +29,6 @@ gradleConventionsDefaults {
       compileSdk = libs.versions.android.sdk.compile,
       targetSdk = libs.versions.android.sdk.target,
       minSdk = libs.versions.android.sdk.min,
-    )
-  }
-
-  compose {
-    multiplatform(
-      compilerOverride = libs.compose.compilerJetbrains,
     )
   }
 
