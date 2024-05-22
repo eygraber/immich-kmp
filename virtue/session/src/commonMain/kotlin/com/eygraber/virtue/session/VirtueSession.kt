@@ -9,10 +9,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.core.bundle.Bundle
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.eygraber.uri.Uri
 import com.eygraber.virtue.back.press.dispatch.BackHandler
 import com.eygraber.virtue.back.press.dispatch.PlatformNavigationHandler
@@ -37,17 +44,20 @@ public class VirtueSession(
   public fun SessionUi(
     darkColorScheme: ColorScheme,
     lightColorScheme: ColorScheme,
-    defaultUri: Uri,
+    startDestination: Any,
   ) {
+    val navController = rememberNavController()
+
     HistoryChangesEffect()
 
     BackHandler(enabled = isBackHandlerEnabled) {
       history.onBackPressed()
+      isBackHandlerEnabled = navController.popBackStack()
     }
 
-    HistoryLifecycleEffect(
-      defaultUri = defaultUri,
-    )
+    // HistoryLifecycleEffect(
+    //   defaultUri = defaultUri,
+    // )
 
     MaterialTheme(
       colorScheme = when {
@@ -61,6 +71,12 @@ public class VirtueSession(
         Box(
           modifier = Modifier.fillMaxSize().padding(contentPadding),
         ) {
+          NavHost(
+            navController = navController,
+            startDestination = startDestination
+          ) {
+
+          }
           router.Render()
         }
       }

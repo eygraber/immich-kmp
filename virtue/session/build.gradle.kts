@@ -31,6 +31,7 @@ kotlin {
 
         api(libs.kotlinx.coroutines.core)
         api(libs.portal.compose)
+        api(libs.vice.nav)
         api(libs.vice.portal)
       }
     }

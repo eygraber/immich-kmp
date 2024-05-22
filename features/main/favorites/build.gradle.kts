@@ -4,6 +4,7 @@ plugins {
   id("com.eygraber.conventions-detekt")
   id("com.eygraber.conventions-compose-jetbrains")
   alias(libs.plugins.ksp)
+  alias(libs.plugins.kotlinxSerialization)
 }
 
 android {

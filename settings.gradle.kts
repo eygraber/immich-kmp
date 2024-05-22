@@ -36,6 +36,13 @@ dependencyResolutionManagement {
   // repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
 
   repositories {
+    mavenLocal {
+      content {
+        includeModuleByRegex("com\\.eygraber", "vice-nav.*")
+        includeGroup("org.jetbrains.androidx.navigation")
+      }
+    }
+
     addCommonRepositories(
       includeMavenCentral = true,
       includeMavenCentralSnapshots = true,
@@ -54,7 +61,7 @@ plugins {
 
 include(":apps:android")
 include(":apps:desktop")
-include(":apps:ios-framework")
+// include(":apps:ios-framework")
 include(":apps:shared")
 include(":apps:webJs")
 include(":apps:webWasm")
