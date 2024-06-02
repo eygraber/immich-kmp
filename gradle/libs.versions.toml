@@ -14,7 +14,7 @@ composeJetbrains = "1.6.10"
 conventions = "0.0.74"
 
 detekt = "1.23.6"
-detektCompose = "0.4.1"
+detektCompose = "0.4.3"
 detektEygraber = "1.0.11"
 
 kotlin = "2.0.0"
@@ -41,7 +41,7 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 android-desugar = "com.android.tools:desugar_jdk_libs:2.0.4"
 
 androidx-activityCompose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
-androidx-appCompat = "androidx.appcompat:appcompat:1.6.1"
+androidx-appCompat = "androidx.appcompat:appcompat:1.7.0"
 
 buildscript-android = { module = "com.android.tools.build:gradle", version.ref = "android-plugin" }
 buildscript-androidCacheFix = { module = "gradle.plugin.org.gradle.android:android-cache-fix-gradle-plugin", version = "3.0.1" }
