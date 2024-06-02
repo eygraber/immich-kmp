@@ -20,8 +20,8 @@ public fun WithBackPressDispatching(
 }
 
 @Composable
-public actual fun BackHandler(enabled: Boolean, onBackPressed: () -> Unit) {
-  val currentOnBackPressed by rememberUpdatedState(onBackPressed)
+public actual fun BackHandler(enabled: Boolean, onBackPress: () -> Unit) {
+  val currentOnBackPressed by rememberUpdatedState(onBackPress)
   val callback = remember {
     object : OnBackPressedCallback {
       override var isEnabled: Boolean = enabled

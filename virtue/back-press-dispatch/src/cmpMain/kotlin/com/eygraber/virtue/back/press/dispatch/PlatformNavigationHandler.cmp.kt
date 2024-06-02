@@ -16,7 +16,7 @@ import com.eygraber.virtue.platform.Platform
 @Suppress("ModifierMissing")
 @Composable
 public actual fun PlatformNavigationHandler(
-  onForwardPressed: () -> Unit,
+  onForwardPress: () -> Unit,
 ) {
   val platform = CurrentPlatform
 
@@ -36,7 +36,7 @@ public actual fun PlatformNavigationHandler(
         )
         .onClick(
           matcher = platform.os.pointerMatcherForward,
-          onClick = onForwardPressed,
+          onClick = onForwardPress,
         ),
     )
   }

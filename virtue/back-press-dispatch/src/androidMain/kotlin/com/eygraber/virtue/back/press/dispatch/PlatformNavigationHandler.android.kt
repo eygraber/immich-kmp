@@ -14,9 +14,9 @@ import androidx.compose.ui.input.pointer.pointerInput
 @Suppress("ModifierMissing")
 @Composable
 public actual fun PlatformNavigationHandler(
-  onForwardPressed: () -> Unit,
+  onForwardPress: () -> Unit,
 ) {
-  val updatedOnForwardPressed by rememberUpdatedState(onForwardPressed)
+  val updatedOnForwardPressed by rememberUpdatedState(onForwardPress)
 
   Box(
     modifier = Modifier.pointerInput(Unit) {

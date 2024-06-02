@@ -5,5 +5,5 @@ import androidx.compose.runtime.Composable
 @Suppress("ModifierMissing")
 @Composable
 public expect fun PlatformNavigationHandler(
-  onForwardPressed: () -> Unit,
+  onForwardPress: () -> Unit,
 )

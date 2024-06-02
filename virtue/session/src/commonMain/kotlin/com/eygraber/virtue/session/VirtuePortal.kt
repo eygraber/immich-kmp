@@ -15,8 +15,8 @@ public abstract class VirtuePortal<K, V, I, C, E, S, out ParentComponent> : Vice
   final override val key: K by lazy(LazyThreadSafetyMode.NONE) { route }
 
   @Composable
-  final override fun OnBackPressedHandler(enabled: Boolean, onBackPressed: () -> Unit) {
-    BackHandler(enabled, onBackPressed)
+  final override fun OnBackPressedHandler(enabled: Boolean, onBackPress: () -> Unit) {
+    BackHandler(enabled, onBackPress)
   }
 
   protected abstract val parentComponent: ParentComponent

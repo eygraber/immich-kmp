@@ -93,7 +93,7 @@ public class VirtueSession(
   @Composable
   private fun PlatformNavigation() {
     PlatformNavigationHandler(
-      onForwardPressed = {
+      onForwardPress = {
         if(history.canGoForward) {
           history.moveForward()
         }
